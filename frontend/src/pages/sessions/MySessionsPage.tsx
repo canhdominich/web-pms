@@ -17,9 +17,9 @@ export function MySessionsPage() {
           <select className="input" value={range.sessionType} onChange={(e) => setRange({ ...range, sessionType: e.target.value })}>
             <option value="">Tất cả loại buổi</option>
             <option value="NORMAL">Buổi thường</option>
-            <option value="TEST">Kiểm tra</option>
-            <option value="MIDTERM">Giữa kỳ</option>
-            <option value="FINAL">Cuối kỳ</option>
+            <option value="TEST">Đánh giá chủ đề</option>
+            <option value="MIDTERM">Đánh giá giữa kỳ</option>
+            <option value="FINAL">Đánh giá cuối kỳ</option>
           </select>
         </div>
         <SessionTable sessions={sessions.data} loading={sessions.isLoading} />

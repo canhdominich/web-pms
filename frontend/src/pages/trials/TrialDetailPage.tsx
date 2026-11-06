@@ -53,7 +53,7 @@ export function TrialDetailPage() {
                 <Pencil size={16} /> Sửa
               </button>
               <button className="btn btn-primary" onClick={() => setConverting(true)}>
-                <UserCheck size={16} /> Chuyển thành học viên
+                <UserCheck size={16} /> Chuyển thành học sinh
               </button>
             </>
           )
@@ -73,7 +73,7 @@ export function TrialDetailPage() {
             {detail.data.conversion && (
               <div className="notice notice-info">
                 Đã chuyển đổi lúc {fmtDateTime(detail.data.conversion.createdAt)} —{' '}
-                <Link to={`/students/${detail.data.conversion.studentId}`}>xem hồ sơ học viên</Link>
+                <Link to={`/students/${detail.data.conversion.studentId}`}>xem hồ sơ học sinh</Link>
               </div>
             )}
           </div>
@@ -105,7 +105,7 @@ export function TrialDetailPage() {
           columns={[
             { header: 'Ngày học thử', cell: (s) => <Link to={`/sessions/${s.sessionId}`}>{fmtWeekday(s.sessionDate)}</Link> },
             { header: 'Lớp', cell: (s) => s.classCode },
-            { header: 'Unit/Lesson', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
+            { header: 'Chủ đề/Hoạt động', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
             { header: 'Kết quả', cell: (s) => <Badge value={s.status} /> },
             { header: 'Ghi chú', cell: (s) => s.note ?? '—' },
             { header: 'Xếp lịch lúc', cell: (s) => fmtDateTime(s.createdAt) },
@@ -189,7 +189,7 @@ function ActiveSchedule({ leadId, sessionDate, classCode }: { leadId: string; se
     <Card title={`Lịch học thử: ${fmtWeekday(sessionDate)} — lớp ${classCode}`}>
       <div className="stack">
         {!started && <div className="notice notice-info">Có thể ghi nhận kết quả từ ngày {fmtDate(sessionDate)}.</div>}
-        <Field label="Đánh giá sau buổi học thử (trình độ phù hợp, nhận xét)">
+        <Field label="Đánh giá sau buổi học thử (lớp phù hợp, nhận xét về bé)">
           <textarea className="input" rows={3} value={note} onChange={(e) => setNote(e.target.value)} />
         </Field>
         <div className="actions">
@@ -215,14 +215,14 @@ function ConvertDialog({ leadId, open, onClose }: { leadId: string; open: boolea
   const [result, setResult] = useState<ConvertResult | null>(null);
   const action = useAction(
     () => http.post<ConvertResult>(`/trial-leads/${leadId}/convert`, { ...blankToNull(form), existingStudentId: useExisting ? existing?.id ?? null : null }),
-    { success: 'Đã chuyển đổi thành học viên chính thức', onSuccess: setResult },
+    { success: 'Đã chuyển đổi thành học sinh chính thức', onSuccess: setResult },
   );
   const set = (key: keyof typeof form) => (e: { target: { value: string } }) => setForm({ ...form, [key]: e.target.value });
 
   return (
     <Modal
       open={open}
-      title="Chuyển đổi học thử thành học viên"
+      title="Chuyển đổi học thử thành học sinh"
       onClose={onClose}
       footer={
         !result && (
@@ -234,18 +234,18 @@ function ConvertDialog({ leadId, open, onClose }: { leadId: string; open: boolea
     >
       {result ? (
         <div className="stack">
-          <div className="notice notice-info">Đã tạo ghi danh lớp {result.enrollment.classCode} cho học viên {result.student.fullName}.</div>
+          <div className="notice notice-info">Đã tạo ghi danh lớp {result.enrollment.classCode} cho học sinh {result.student.fullName}.</div>
           <Link className="btn btn-primary" to={`/students/${result.student.id}`}>
-            Mở hồ sơ học viên
+            Mở hồ sơ học sinh
           </Link>
         </div>
       ) : (
         <div className="form-grid">
           <label className="check span-2">
-            <input type="checkbox" checked={useExisting} onChange={(e) => setUseExisting(e.target.checked)} /> Học viên đã có hồ sơ trong hệ thống
+            <input type="checkbox" checked={useExisting} onChange={(e) => setUseExisting(e.target.checked)} /> Học sinh đã có hồ sơ trong hệ thống
           </label>
           {useExisting ? (
-            <Field group label="Chọn hồ sơ học viên" span>
+            <Field group label="Chọn hồ sơ học sinh" span>
               <StudentPicker value={existing} onChange={setExisting} />
             </Field>
           ) : (

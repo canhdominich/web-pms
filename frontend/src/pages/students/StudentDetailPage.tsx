@@ -22,16 +22,16 @@ export function StudentDetailPage() {
   const student = useGet<Student>(`/students/${id}`);
   const update = useAction((v: StudentValues) => http.put(`/students/${id}`, blankToNull(v)), { success: 'Đã cập nhật hồ sơ', onSuccess: () => setEditing(false) });
 
-  if (!student.data) return <LoadState error={student.error} back={{ to: '/students', label: 'Danh sách học viên' }} />;
+  if (!student.data) return <LoadState error={student.error} back={{ to: '/students', label: 'Danh sách học sinh' }} />;
   const s = student.data;
   const tabs: { key: TabKey; label: string }[] = [{ key: 'enrollments', label: 'Ghi danh' }];
-  if (can(RoleSets.AssessmentViewers)) tabs.push({ key: 'assessments', label: 'Nhận xét & điểm' });
+  if (can(RoleSets.AssessmentViewers)) tabs.push({ key: 'assessments', label: 'Nhận xét & đánh giá' });
   if (can(RoleSets.FinanceViewers)) tabs.push({ key: 'finance', label: 'Tài chính' });
 
   return (
     <>
       <PageHeader
-        back={{ to: '/students', label: 'Danh sách học viên' }}
+        back={{ to: '/students', label: 'Danh sách học sinh' }}
         title={s.fullName}
         subtitle={`Hồ sơ tạo ngày ${fmtDate(s.createdAt)}`}
         actions={
@@ -61,7 +61,7 @@ export function StudentDetailPage() {
       {tab === 'finance' && <FinanceTab studentId={id} />}
       <Modal
         open={editing}
-        title="Sửa hồ sơ học viên"
+        title="Sửa hồ sơ học sinh"
         onClose={() => setEditing(false)}
         footer={
           <button className="btn btn-primary" form="edit-student" disabled={update.isPending}>
@@ -105,7 +105,7 @@ function EnrollmentsTab({ student }: { student: Student }) {
         rows={enrollments.data}
         loading={enrollments.isLoading}
         rowKey={(e) => e.id}
-        empty="Học viên chưa có ghi danh"
+        empty="Học sinh chưa có ghi danh"
         columns={[
           { header: 'Lớp', cell: (e) => <Link to={`/classes/${e.classId}`}>{e.classCode}</Link> },
           { header: 'Tên lớp', cell: (e) => e.className },
@@ -166,7 +166,7 @@ function AssessmentsTab({ studentId }: { studentId: string }) {
   const [range, setRange] = useState({ from: '', to: '' });
   const history = useGet<StudentAssessment[]>(`/students/${studentId}/assessments`, range);
   return (
-    <Card title="Lịch sử nhận xét và điểm">
+    <Card title="Lịch sử nhận xét và đánh giá">
       <div className="toolbar">
         <DateRange from={range.from} to={range.to} onChange={setRange} />
       </div>
@@ -174,16 +174,16 @@ function AssessmentsTab({ studentId }: { studentId: string }) {
         rows={history.data}
         loading={history.isLoading}
         rowKey={(a) => a.sessionId}
-        empty="Chưa có nhận xét hoặc điểm"
+        empty="Chưa có nhận xét hoặc đánh giá"
         columns={[
           { header: 'Ngày', cell: (a) => <Link to={`/sessions/${a.sessionId}`}>{fmtDate(a.sessionDate)}</Link> },
           { header: 'Lớp', cell: (a) => a.classCode },
-          { header: 'Unit/Lesson', cell: (a) => fmtLesson(a.unitNo, a.lessonNo) },
+          { header: 'Chủ đề/Hoạt động', cell: (a) => fmtLesson(a.unitNo, a.lessonNo) },
           { header: 'Loại', cell: (a) => <Badge value={a.sessionType} /> },
           { header: 'Chuyên cần', cell: (a) => (a.feedback?.attendance ? <Badge value={a.feedback.attendance} /> : '—') },
-          { header: 'Bài tập', cell: (a) => label(a.feedback?.homework) },
+          { header: 'Hoạt động tại nhà', cell: (a) => label(a.feedback?.homework) },
           { header: 'Nhận xét', cell: (a) => a.feedback?.commentText ?? '—' },
-          { header: 'Điểm', cell: (a) => (a.score ? <strong>{a.score.total}</strong> : '—'), className: 'right' },
+          { header: 'Đánh giá', cell: (a) => (a.score ? <strong>{a.score.total}</strong> : '—'), className: 'right' },
         ]}
       />
     </Card>

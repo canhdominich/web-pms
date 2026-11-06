@@ -18,7 +18,7 @@ export const actionNames: Record<string, string> = {
   CHANGE_MAIN_TEACHER: 'Đổi giáo viên chính',
   ENROLL: 'Ghi danh',
   TRANSFER: 'Chuyển lớp',
-  PROMOTE: 'Chuyển cấp',
+  PROMOTE: 'Lên lớp',
   CLOSE: 'Đóng lớp',
   ISSUE: 'Phát hành hóa đơn',
   CANCEL: 'Hủy',
@@ -26,7 +26,7 @@ export const actionNames: Record<string, string> = {
   TRIAL_SCHEDULE: 'Xếp lịch học thử',
   TRIAL_RESULT: 'Kết quả học thử',
   TRIAL_CANCEL: 'Hủy lịch học thử',
-  CONVERT: 'Chuyển đổi thành học viên',
+  CONVERT: 'Chuyển đổi thành học sinh',
   SEND: 'Gửi thông báo',
   RESET: 'Reset dữ liệu demo',
 };
@@ -37,8 +37,8 @@ export const entityNames: Record<string, string> = {
   classes: 'Lớp học',
   sessions: 'Buổi học',
   session_feedback: 'Nhận xét',
-  session_scores: 'Điểm số',
-  students: 'Học viên',
+  session_scores: 'Đánh giá phát triển',
+  students: 'Học sinh',
   enrollments: 'Ghi danh',
   finance_fee_plans: 'Gói học phí',
   finance_invoices: 'Hóa đơn',
@@ -82,7 +82,7 @@ export function describeMeta(meta: unknown): string {
   if (typeof m.sessions === 'number') parts.push(`${m.sessions} buổi`);
   if (typeof m.rows === 'number') parts.push(`${m.rows} dòng`);
   if (typeof m.recipients === 'number') parts.push(`${m.recipients} người nhận`);
-  if (Array.isArray(m.changes)) parts.push(`${m.changes.length} học viên`);
+  if (Array.isArray(m.changes)) parts.push(`${m.changes.length} học sinh`);
   if (typeof m.title === 'string') parts.push(m.title);
   if (typeof m.fullName === 'string') parts.push(m.fullName);
   if (typeof m.code === 'string') parts.push(m.code);

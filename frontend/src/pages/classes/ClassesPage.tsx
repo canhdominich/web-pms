@@ -117,7 +117,7 @@ function CreateClassDialog({ open, onClose, onCreated }: { open: boolean; onClos
       }
     >
       <form id="create-class" className="form-grid" onSubmit={handleSubmit((v) => action.mutate(v), onInvalid)}>
-        <Field label="Mã lớp" hint="VD: EIM1-STARTERS-2026B">
+        <Field label="Mã lớp" hint="VD: TLH-CHOI2-2026A">
           <input className="input" required pattern="[A-Za-z0-9_\-]+" {...register('code', { required: true })} />
         </Field>
         <Field label="Tên lớp">

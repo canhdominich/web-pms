@@ -1,4 +1,4 @@
-ALTER DATABASE CHARACTER SET utf8mb4;
+﻿ALTER DATABASE CHARACTER SET utf8mb4;
 
 
 CREATE TABLE `auth_roles` (
@@ -192,20 +192,20 @@ CREATE TABLE `session_scores` (
     `session_id` char(36) COLLATE ascii_general_ci NOT NULL,
     `student_id` char(36) COLLATE ascii_general_ci NOT NULL,
     `score_type` text CHARACTER SET utf8mb4 NOT NULL,
-    `listening` int NULL,
-    `reading` int NULL,
-    `writing` int NULL,
-    `speaking` int NULL,
+    `language` int NULL,
+    `cognitive` int NULL,
+    `physical` int NULL,
+    `social` int NULL,
     `total` int NOT NULL,
     `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     CONSTRAINT `pk_session_scores` PRIMARY KEY (`id`),
-    CONSTRAINT `ck_session_scores_listening` CHECK (listening BETWEEN 0 AND 100),
-    CONSTRAINT `ck_session_scores_reading` CHECK (reading BETWEEN 0 AND 100),
+    CONSTRAINT `ck_session_scores_cognitive` CHECK (cognitive BETWEEN 0 AND 100),
+    CONSTRAINT `ck_session_scores_language` CHECK (language BETWEEN 0 AND 100),
+    CONSTRAINT `ck_session_scores_physical` CHECK (physical BETWEEN 0 AND 100),
     CONSTRAINT `ck_session_scores_score_type` CHECK (score_type IN ('TEST', 'MIDTERM', 'FINAL')),
-    CONSTRAINT `ck_session_scores_speaking` CHECK (speaking BETWEEN 0 AND 100),
+    CONSTRAINT `ck_session_scores_social` CHECK (social BETWEEN 0 AND 100),
     CONSTRAINT `ck_session_scores_total` CHECK (total BETWEEN 0 AND 100),
-    CONSTRAINT `ck_session_scores_writing` CHECK (writing BETWEEN 0 AND 100),
     CONSTRAINT `fk_session_scores_sessions_session_id` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`) ON DELETE RESTRICT,
     CONSTRAINT `fk_session_scores_students_student_id` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE RESTRICT
 ) CHARACTER SET=utf8mb4;

@@ -1,4 +1,4 @@
-name: eim
+name: tlighthouse
 
 services:
   mysql:
@@ -9,8 +9,8 @@ services:
       - --collation-server=utf8mb4_0900_ai_ci
       - --default-time-zone=+00:00
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-eim}
-      MYSQL_USER: ${MYSQL_USER:-eim}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-tlighthouse}
+      MYSQL_USER: ${MYSQL_USER:-tlighthouse}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
     ports:
@@ -24,26 +24,26 @@ services:
       retries: 30
       start_period: 20s
     networks:
-      - eim
+      - tlighthouse
 
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    image: eim-api:latest
+    image: tlighthouse-api:latest
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
-      Database__ConnectionString: "Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-eim};User=${MYSQL_USER:-eim};Password=${MYSQL_PASSWORD};CharSet=utf8mb4"
+      Database__ConnectionString: "Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-tlighthouse};User=${MYSQL_USER:-tlighthouse};Password=${MYSQL_PASSWORD};CharSet=utf8mb4"
       Database__ServerVersion: "8.4.0"
       Database__CreateSchemaOnStartup: "true"
       Jwt__SigningKey: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
       Jwt__AccessTokenMinutes: ${JWT_ACCESS_TOKEN_MINUTES:-15}
       Jwt__RefreshTokenDays: ${JWT_REFRESH_TOKEN_DAYS:-7}
-      Seed__RootEmail: ${ROOT_EMAIL:-root@eim.local}
+      Seed__RootEmail: ${ROOT_EMAIL:-root@tlighthouse.local}
       Seed__RootPassword: ${ROOT_PASSWORD:?ROOT_PASSWORD is required}
       Demo__Enabled: ${DEMO_ENABLED:-false}
       Demo__SeedOnStartup: ${DEMO_SEED_ON_STARTUP:-false}
@@ -56,24 +56,24 @@ services:
     ports:
       - "${API_PORT:-8080}:8080"
     networks:
-      - eim
+      - tlighthouse
 
   web:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: eim-web:latest
+    image: tlighthouse-web:latest
     restart: unless-stopped
     depends_on:
       - api
     ports:
       - "${WEB_PORT:-3000}:80"
     networks:
-      - eim
+      - tlighthouse
 
 volumes:
   mysql-data:
 
 networks:
-  eim:
+  tlighthouse:
     driver: bridge

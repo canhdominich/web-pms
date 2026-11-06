@@ -23,11 +23,11 @@ export function RosterTab({ detail, editable }: { detail: ClassDetail; editable:
 
   return (
     <Card
-      title={`Danh sách học viên (${c.enrolled}/${c.capacity})`}
+      title={`Danh sách học sinh (${c.enrolled}/${c.capacity})`}
       actions={
         editable && (
           <button className="btn btn-primary" onClick={() => setAdding(true)} disabled={c.status !== 'ACTIVE' || c.enrolled >= c.capacity}>
-            <UserPlus size={16} /> Thêm học viên
+            <UserPlus size={16} /> Thêm học sinh
           </button>
         )
       }
@@ -35,9 +35,9 @@ export function RosterTab({ detail, editable }: { detail: ClassDetail; editable:
       <DataTable
         rows={detail.roster}
         rowKey={(r) => r.enrollmentId}
-        empty="Lớp chưa có học viên"
+        empty="Lớp chưa có học sinh"
         columns={[
-          { header: 'Học viên', cell: (r) => <Link to={`/students/${r.studentId}`}>{r.fullName}</Link> },
+          { header: 'Học sinh', cell: (r) => <Link to={`/students/${r.studentId}`}>{r.fullName}</Link> },
           { header: 'SĐT', cell: (r) => r.phone ?? '—' },
           { header: 'Phụ huynh', cell: (r) => [r.guardianName, r.guardianPhone].filter(Boolean).join(' · ') || '—' },
           { header: 'Bắt đầu', cell: (r) => fmtDate(r.startDate) },
@@ -77,7 +77,7 @@ function AddStudentDialog({ classId, open, onClose }: { classId: string; open: b
   const [student, setStudent] = useState<Student | null>(null);
   const [startDate, setStartDate] = useState(today());
   const action = useAction(() => http.post(`/classes/${classId}/students`, { studentId: student!.id, startDate }), {
-    success: 'Đã thêm học viên vào lớp',
+    success: 'Đã thêm học sinh vào lớp',
     onSuccess: () => {
       setStudent(null);
       onClose();
@@ -86,7 +86,7 @@ function AddStudentDialog({ classId, open, onClose }: { classId: string; open: b
   return (
     <Modal
       open={open}
-      title="Thêm học viên vào lớp"
+      title="Thêm học sinh vào lớp"
       onClose={onClose}
       footer={
         <button className="btn btn-primary" disabled={!student || action.isPending} onClick={() => action.mutate(undefined)}>
@@ -95,7 +95,7 @@ function AddStudentDialog({ classId, open, onClose }: { classId: string; open: b
       }
     >
       <div className="stack">
-        <Field group label="Học viên">
+        <Field group label="Học sinh">
           <StudentPicker value={student} onChange={setStudent} />
         </Field>
         <Field label="Ngày bắt đầu học">

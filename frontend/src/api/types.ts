@@ -145,10 +145,10 @@ export type Score = {
   sessionId: string;
   studentId: string;
   scoreType: string;
-  listening: number | null;
-  reading: number | null;
-  writing: number | null;
-  speaking: number | null;
+  language: number | null;
+  cognitive: number | null;
+  physical: number | null;
+  social: number | null;
   total: number;
   createdAt: string;
   updatedAt: string;

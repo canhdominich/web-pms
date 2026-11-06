@@ -15,12 +15,12 @@ export function PaymentStatusPage() {
 
   return (
     <>
-      <PageHeader title="Công nợ & báo cáo tài chính" subtitle="Tình trạng đã đóng / chưa đóng của học viên đang học" />
+      <PageHeader title="Công nợ & báo cáo tài chính" subtitle="Tình trạng đã đóng / chưa đóng của học sinh đang học" />
       <Card>
         <div className="toolbar">
           <div className="input-icon">
             <Search size={16} />
-            <input className="input" placeholder="Tìm học viên" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })} />
+            <input className="input" placeholder="Tìm học sinh" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })} />
           </div>
           <ClassSelect activeOnly={false} placeholder="Tất cả lớp" value={filters.classId} onChange={(e) => setFilters({ ...filters, classId: e.target.value, page: 1 })} />
           <select className="input" value={filters.state} onChange={(e) => setFilters({ ...filters, state: e.target.value, page: 1 })}>
@@ -35,7 +35,7 @@ export function PaymentStatusPage() {
           loading={statuses.isLoading}
           rowKey={(s) => s.enrollmentId}
           columns={[
-            { header: 'Học viên', cell: (s) => <Link to={`/students/${s.studentId}`}>{s.studentName}</Link> },
+            { header: 'Học sinh', cell: (s) => <Link to={`/students/${s.studentId}`}>{s.studentName}</Link> },
             { header: 'Lớp', cell: (s) => s.classCode },
             { header: 'Ghi danh', cell: (s) => <Badge value={s.enrollmentStatus} /> },
             { header: 'Phải thu', cell: (s) => fmtMoney(s.totalInvoiced), className: 'right' },

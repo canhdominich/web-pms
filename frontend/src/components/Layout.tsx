@@ -41,7 +41,7 @@ const sections: { title: string; items: NavItem[] }[] = [
       { to: '/programs', label: 'Chương trình học', icon: BookOpen, roles: RoleSets.Staff },
       { to: '/classes', label: 'Lớp học', icon: School, roles: RoleSets.Staff },
       { to: '/teacher-sessions', label: 'Lịch giáo viên', icon: ClipboardList, roles: RoleSets.Staff },
-      { to: '/students', label: 'Học viên', icon: GraduationCap, roles: RoleSets.Staff },
+      { to: '/students', label: 'Học sinh', icon: GraduationCap, roles: RoleSets.Staff },
       { to: '/trials', label: 'Học thử', icon: UserPlus, roles: RoleSets.TrialViewers },
     ],
   },
@@ -82,10 +82,10 @@ export function Layout() {
       {menuOpen && <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} />}
       <aside className={`sidebar ${menuOpen ? 'open' : ''}`}>
         <div className="brand">
-          <div className="brand-logo">EIM</div>
+          <div className="brand-logo">TL</div>
           <div>
-            <div className="brand-name">EIM Center</div>
-            <div className="brand-sub">Quản lý trung tâm</div>
+            <div className="brand-name">T-Lighthouse</div>
+            <div className="brand-sub">Quản lý đào tạo mầm non</div>
           </div>
         </div>
         <nav>

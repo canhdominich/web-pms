@@ -54,7 +54,7 @@ export function ClassDetailPage() {
               <button
                 className="btn btn-danger"
                 disabled={close.isPending}
-                onClick={async () => (await confirm({ title: 'Đóng lớp', message: 'Các học viên đang học/bảo lưu sẽ chuyển sang Hoàn thành và lớp không nhận thêm học viên. Thao tác không thể hoàn tác.', confirmText: 'Đóng lớp', danger: true })) && close.mutate(undefined)}
+                onClick={async () => (await confirm({ title: 'Đóng lớp', message: 'Các học sinh đang học/bảo lưu sẽ chuyển sang Hoàn thành và lớp không nhận thêm học sinh. Thao tác không thể hoàn tác.', confirmText: 'Đóng lớp', danger: true })) && close.mutate(undefined)}
               >
                 <Lock size={16} /> Đóng lớp
               </button>
@@ -78,11 +78,11 @@ export function ClassDetailPage() {
         active={tab}
         onChange={setTab}
         tabs={[
-          { key: 'roster', label: `Học viên (${detail.data.roster.length})` },
+          { key: 'roster', label: `Học sinh (${detail.data.roster.length})` },
           { key: 'sessions', label: 'Buổi học' },
           { key: 'schedule', label: 'Lịch học' },
           { key: 'teachers', label: 'Giáo viên' },
-          { key: 'promotion', label: 'Chuyển cấp' },
+          { key: 'promotion', label: 'Lên lớp' },
         ]}
       />
       {tab === 'roster' && <RosterTab detail={detail.data} editable={editable && open} />}

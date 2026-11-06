@@ -6,7 +6,7 @@ type ToastApi = { success: (message: string) => void; error: (message: string) =
 
 const ToastContext = createContext<ToastApi | null>(null);
 
-const TOAST_EVENT = 'eim:toast-error';
+const TOAST_EVENT = 'tlighthouse:toast-error';
 
 export const notifyError = (message: string) => window.dispatchEvent(new CustomEvent<string>(TOAST_EVENT, { detail: message }));
 

@@ -37,17 +37,17 @@ export function ProgramDetailPage() {
   });
 
   const save = useAction((v: ProgramForm) => http.put(`/programs/${id}`, { ...v, feePlanId: v.feePlanId || null }), { success: 'Đã cập nhật chương trình' });
-  const saveUnits = useAction((v: UnitsForm) => http.put(`/programs/${id}/units`, v), { success: 'Đã cập nhật cấu trúc unit' });
+  const saveUnits = useAction((v: UnitsForm) => http.put(`/programs/${id}/units`, v), { success: 'Đã cập nhật cấu trúc chủ đề' });
 
   if (!program || !structure.data) return <LoadState error={detail.error ?? structure.error} back={{ to: '/programs', label: 'Chương trình học' }} />;
   const locked = program.activeClassCount > 0;
 
   return (
     <>
-      <PageHeader back={{ to: '/programs', label: 'Chương trình học' }} title={`${program.code} — ${program.name}`} subtitle={`Cấp độ ${program.level} · tạo lúc ${fmtDateTime(program.createdAt)}`} />
+      <PageHeader back={{ to: '/programs', label: 'Chương trình học' }} title={`${program.code} — ${program.name}`} subtitle={`Độ tuổi ${program.level} · tạo lúc ${fmtDateTime(program.createdAt)}`} />
       <div className="stats">
-        <div className="stat"><div><div className="stat-value">{structure.data.totalUnits}</div><div className="stat-label">Unit</div></div></div>
-        <div className="stat"><div><div className="stat-value">{structure.data.lessonsPerUnit}</div><div className="stat-label">Bài học / unit</div></div></div>
+        <div className="stat"><div><div className="stat-value">{structure.data.totalUnits}</div><div className="stat-label">Chủ đề</div></div></div>
+        <div className="stat"><div><div className="stat-value">{structure.data.lessonsPerUnit}</div><div className="stat-label">Hoạt động / chủ đề</div></div></div>
         <div className="stat"><div><div className="stat-value">{structure.data.plannedSessions}</div><div className="stat-label">Buổi học dự kiến</div></div></div>
         <div className="stat"><div><div className="stat-value">{program.activeClassCount}</div><div className="stat-label">Lớp đang triển khai</div></div></div>
       </div>
@@ -77,16 +77,16 @@ export function ProgramDetailPage() {
                   )}
                 />
               </Field>
-              <Field label="Số unit">
+              <Field label="Số chủ đề">
                 <input className="input" type="number" min={1} max={50} disabled={locked} {...form.register('totalUnits', { valueAsNumber: true })} />
               </Field>
-              <Field label="Số bài / unit">
+              <Field label="Số hoạt động / chủ đề">
                 <input className="input" type="number" min={1} max={20} disabled={locked} {...form.register('lessonsPerUnit', { valueAsNumber: true })} />
               </Field>
               <Field label="Số buổi / tuần">
                 <input className="input" type="number" min={1} max={7} disabled={locked} {...form.register('sessionsPerWeek', { valueAsNumber: true })} />
               </Field>
-              {locked && <div className="notice span-2">Chương trình đang có lớp triển khai nên không thể thay đổi cấu trúc unit/lesson.</div>}
+              {locked && <div className="notice span-2">Chương trình đang có lớp triển khai nên không thể thay đổi cấu trúc chủ đề/hoạt động.</div>}
               <div className="span-2">
                 <button className="btn btn-primary" disabled={save.isPending}>Lưu thay đổi</button>
               </div>
@@ -95,24 +95,24 @@ export function ProgramDetailPage() {
             <KeyValue
               items={[
                 ['Mã', program.code],
-                ['Cấp độ', program.level],
+                ['Độ tuổi', program.level],
                 ['Buổi / tuần', program.sessionsPerWeek],
                 ['Học phí mặc định', program.feePlanAmount ? fmtMoney(program.feePlanAmount) : '—'],
               ]}
             />
           )}
         </Card>
-        <Card title="Quản lý đơn vị bài học (Unit)">
+        <Card title="Quản lý chủ đề giáo dục">
           <div className="stack">
             <p className="muted">
-              Mỗi unit chia thành các buổi theo nhóm bài (1&2, 3, 4&5, 6&7). Sau mỗi 2 unit có bài kiểm tra, sau unit 6 là giữa kỳ, sau unit 12 là cuối kỳ.
+              Mỗi chủ đề giáo dục chia thành các buổi theo nhóm hoạt động (1&2, 3, 4&5, 6&7). Sau mỗi 2 chủ đề có buổi đánh giá chủ đề, sau chủ đề 6 là đánh giá giữa kỳ, sau chủ đề 12 là đánh giá cuối kỳ.
             </p>
             {editable && (
               <form className="form-grid" onSubmit={unitsForm.handleSubmit((v) => saveUnits.mutate(v), onInvalid)}>
-                <Field label="Tổng số unit">
+                <Field label="Tổng số chủ đề">
                   <input className="input" type="number" min={1} max={50} disabled={locked} {...unitsForm.register('totalUnits', { valueAsNumber: true })} />
                 </Field>
-                <Field label="Số bài / unit">
+                <Field label="Số hoạt động / chủ đề">
                   <input className="input" type="number" min={1} max={20} disabled={locked} {...unitsForm.register('lessonsPerUnit', { valueAsNumber: true })} />
                 </Field>
                 <div className="span-2">
@@ -128,7 +128,7 @@ export function ProgramDetailPage() {
           {structure.data.units.map((u) => (
             <div key={u.unitNo} className="unit">
               <div className="unit-title">
-                <span>Unit {u.unitNo}</span>
+                <span>Chủ đề {u.unitNo}</span>
                 {u.assessmentAfter && <Badge value={u.assessmentAfter} />}
               </div>
               <div className="chips">

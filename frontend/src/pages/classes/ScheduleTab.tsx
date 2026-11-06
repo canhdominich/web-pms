@@ -27,7 +27,7 @@ export function ScheduleTab({ detail, editable }: { detail: ClassDetail; editabl
             ['Ngày học', s.weekdays.length ? s.weekdays.map((d) => weekdayNames[d]).join(', ') : 'Chưa có'],
             ['Tổng số buổi', s.totalSessions],
             ['Đã diễn ra', s.completedSessions],
-            ['Đã chốt nhận xét/điểm', s.lockedSessions],
+            ['Đã chốt nhận xét/đánh giá', s.lockedSessions],
             ['Buổi đầu', fmtDate(s.firstSessionDate)],
             ['Buổi cuối', fmtDate(s.lastSessionDate)],
           ]}
@@ -37,7 +37,7 @@ export function ScheduleTab({ detail, editable }: { detail: ClassDetail; editabl
         (s.totalSessions === 0 ? (
           <Card title="Sinh buổi học tự động">
             <div className="stack">
-              <p className="muted">Hệ thống sinh toàn bộ buổi học theo cấu trúc unit/lesson và tự xác định buổi kiểm tra.</p>
+              <p className="muted">Hệ thống sinh toàn bộ buổi học theo cấu trúc chủ đề/hoạt động và tự xác định buổi đánh giá.</p>
               <Field group label="Ngày học trong tuần">
                 <WeekdayChecks value={weekdays} onChange={setWeekdays} />
               </Field>
@@ -57,7 +57,7 @@ export function ScheduleTab({ detail, editable }: { detail: ClassDetail; editabl
         ) : (
           <Card title="Thay đổi lịch học">
             <div className="stack">
-              <p className="muted">Các buổi từ ngày hiệu lực sẽ được dời sang lịch mới, giữ nguyên thứ tự unit/lesson. Buổi đã có nhận xét không thể dời.</p>
+              <p className="muted">Các buổi từ ngày hiệu lực sẽ được dời sang lịch mới, giữ nguyên thứ tự chủ đề/hoạt động. Buổi đã có nhận xét không thể dời.</p>
               <Field group label="Ngày học mới trong tuần">
                 <WeekdayChecks value={weekdays} onChange={setWeekdays} />
               </Field>

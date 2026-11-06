@@ -30,8 +30,8 @@ export type RoleSet = readonly string[];
 
 export const roleNames: Record<string, string> = {
   ROOT: 'Quản trị hệ thống',
-  DIRECTOR: 'Giám đốc',
-  ACADEMIC: 'Học vụ',
+  DIRECTOR: 'Hiệu trưởng',
+  ACADEMIC: 'Giáo vụ',
   SALES: 'Tuyển sinh',
   ACCOUNTANT: 'Kế toán',
   TEACHER: 'Giáo viên',

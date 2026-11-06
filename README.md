@@ -1,6 +1,6 @@
-# EIM – Hệ thống quản lý trung tâm (ASP.NET Core 8 + React + MySQL + Docker)
+# T-Lighthouse – Hệ thống quản lý đào tạo trường mầm non (ASP.NET Core 8 + React + MySQL + Docker)
 
-Hệ thống gồm backend REST API và frontend ReactJS cho trung tâm EIM, được xây dựng theo đúng mô tả trong `problem/THIET_KE_CSDL.txt`, `problem/CHUC_NANG.txt` và `problem/NGHIEP_VU.txt`.
+Hệ thống gồm backend REST API và frontend ReactJS cho trường mầm non T-Lighthouse, được xây dựng theo đúng mô tả trong `problem/THIET_KE_CSDL.txt`, `problem/CHUC_NANG.txt` và `problem/NGHIEP_VU.txt`.
 
 ## Công nghệ
 
@@ -21,13 +21,13 @@ Hệ thống gồm backend REST API và frontend ReactJS cho trung tâm EIM, đ�
 ```
 source/
 ├── src/
-│   ├── EIM.Domain/          Entity, hằng số trạng thái/vai trò, rule nghiệp vụ (sinh buổi học, lịch tuần)
-│   ├── EIM.Application/     DTO, interface, service nghiệp vụ theo từng phân hệ (Features/*)
-│   ├── EIM.Infrastructure/  DbContext, cấu hình bảng, JWT, Excel, seed, job quá hạn
-│   └── EIM.Api/             Controller, xử lý lỗi tập trung, cấu hình auth/CORS/rate limit/Swagger
+│   ├── TLighthouse.Domain/          Entity, hằng số trạng thái/vai trò, rule nghiệp vụ (sinh buổi học, lịch tuần)
+│   ├── TLighthouse.Application/     DTO, interface, service nghiệp vụ theo từng phân hệ (Features/*)
+│   ├── TLighthouse.Infrastructure/  DbContext, cấu hình bảng, JWT, Excel, seed, job quá hạn
+│   └── TLighthouse.Api/             Controller, xử lý lỗi tập trung, cấu hình auth/CORS/rate limit/Swagger
 ├── frontend/                Ứng dụng React (Vite + TypeScript), phục vụ bằng nginx, proxy /api tới API
 ├── database/schema.sql      Script DDL MySQL (đúng 15 bảng), sinh từ model EF Core
-├── database/eim_dump.sql    Bản export đầy đủ CSDL (cấu trúc + dữ liệu demo), tạo bằng mysqldump
+├── database/tlighthouse_dump.sql    Bản export đầy đủ CSDL (cấu trúc + dữ liệu demo), tạo bằng mysqldump
 ├── Dockerfile
 ├── docker-compose.yml
 └── .env.example
@@ -53,12 +53,21 @@ Tài khoản demo (mật khẩu `DEMO_PASSWORD`, mặc định `Demo@12345`):
 
 | Email | Vai trò |
 |---|---|
-| root@eim.local (mật khẩu `ROOT_PASSWORD`) | ROOT |
-| director@eim.local | DIRECTOR |
-| academic@eim.local | ACADEMIC |
-| sales@eim.local | SALES |
-| accountant@eim.local | ACCOUNTANT |
-| teacher1@eim.local, teacher2@eim.local | TEACHER |
+| root@tlighthouse.local (mật khẩu `ROOT_PASSWORD`) | ROOT (Quản trị hệ thống) |
+| hieutruong@tlighthouse.local | DIRECTOR (Hiệu trưởng) |
+| giaovu@tlighthouse.local | ACADEMIC (Giáo vụ) |
+| tuyensinh@tlighthouse.local | SALES (Tuyển sinh) |
+| ketoan@tlighthouse.local | ACCOUNTANT (Kế toán) |
+| giaovien1@tlighthouse.local, giaovien2@tlighthouse.local | TEACHER (Giáo viên) |
+
+Dữ liệu demo (trường mầm non T-Lighthouse):
+
+| Nhóm | Nội dung |
+|---|---|
+| Chương trình | Nhà trẻ Ánh Sao (24-36 tháng), Lớp Mầm Mặt Trời (3-4 tuổi), Lớp Chồi Cầu Vồng (4-5 tuổi), Lớp Lá Hải Đăng (5-6 tuổi); 5 buổi/tuần |
+| Lớp học | TLH-CHOI1-2026A (đang học), TLH-MAM1-2026A (sắp khai giảng) |
+| Học phí | Gói học kỳ 3 tháng: 9.000.000 / 10.500.000 / 11.400.000 / 12.000.000 VND |
+| Đánh giá phát triển | 4 lĩnh vực lưu ở các cột `language`, `cognitive`, `physical`, `social`: Ngôn ngữ, Nhận thức, Thể chất, Tình cảm - xã hội |
 
 Dừng: `docker compose down` (thêm `-v` để xóa dữ liệu MySQL).
 
@@ -70,10 +79,10 @@ Có 2 cách dựng CSDL thủ công:
 
 ```bash
 mysql -u<user> -p <database> < database/schema.sql     # chỉ cấu trúc 15 bảng
-mysql -u<user> -p <database> < database/eim_dump.sql   # cấu trúc + dữ liệu demo
+mysql -u<user> -p <database> < database/tlighthouse_dump.sql   # cấu trúc + dữ liệu demo
 ```
 
-Tất cả khóa ngoại, CHECK, UNIQUE và giá trị mặc định trong `THIET_KE_CSDL.txt` đều được tạo đúng. Ngoài ra chỉ thêm 2 ràng buộc UNIQUE(session_id, student_id) cho `session_feedback` và `session_scores`, theo yêu cầu trong tài liệu Overview: mỗi học viên chỉ có 1 nhận xét và 1 điểm cho mỗi buổi.
+Tất cả khóa ngoại, CHECK, UNIQUE và giá trị mặc định trong `THIET_KE_CSDL.txt` đều được tạo đúng. Ngoài ra chỉ thêm 2 ràng buộc UNIQUE(session_id, student_id) cho `session_feedback` và `session_scores`, theo yêu cầu trong tài liệu Overview: mỗi học sinh chỉ có 1 nhận xét và 1 điểm cho mỗi buổi.
 
 Ánh xạ kiểu PostgreSQL → MySQL:
 - `uuid` → `CHAR(36)`
@@ -90,8 +99,8 @@ Một số chức năng không có bảng riêng trong thiết kế. Chúng đư
 |---|---|
 | Vai trò của người dùng (chức năng 4) | Sự kiện `ASSIGN_ROLE` / `REVOKE_ROLE` trong `system_audit_logs` (`entity = auth_users`, `meta = {"role": "..."}`). Vai trò hiện tại được tính từ chuỗi sự kiện. |
 | Lịch học thử (chức năng 33) | `trial_leads.status` giữ trạng thái hiện tại. Sự kiện `TRIAL_SCHEDULE` / `TRIAL_RESULT` / `TRIAL_CANCEL` trong `system_audit_logs` lưu buổi học (`sessionId`) và kết quả. |
-| Chuyển đổi học thử (chức năng 34) | `trial_leads.status = CONVERTED`. Sự kiện `CONVERT` lưu `studentId`, `enrollmentId`. Học viên và ghi danh được tạo trong `students`, `enrollments`. |
-| Unit / Lesson (chức năng 6) | Suy ra từ `total_units` và `lessons_per_unit` của `curriculum_programs`. |
+| Chuyển đổi học thử (chức năng 34) | `trial_leads.status = CONVERTED`. Sự kiện `CONVERT` lưu `studentId`, `enrollmentId`. Học sinh và ghi danh được tạo trong `students`, `enrollments`. |
+| Chủ đề / Hoạt động (chức năng 6, mã nội bộ unit/lesson) | Suy ra từ `total_units` và `lessons_per_unit` của `curriculum_programs`. |
 | Lịch học, nhân sự lớp (9, 10) | Nằm trong `sessions` (`session_date`, `main_teacher_id`, `cover_teacher_id`). |
 | Lịch sử ghi danh, đăng xuất | Sự kiện trong `system_audit_logs`. |
 
@@ -108,35 +117,35 @@ Mọi API (trừ login/refresh) yêu cầu header `Authorization: Bearer <access
 | 3 | Quản lý tài khoản | `GET/POST /api/users`, `GET/PUT /api/users/{id}` |
 | 4 | Gán / thu hồi vai trò | `GET /api/roles`, `POST /api/users/{id}/roles`, `DELETE /api/users/{id}/roles/{roleCode}`, `GET /api/teachers` |
 | 5 | Chương trình học | `GET/POST /api/programs`, `GET/PUT /api/programs/{id}` |
-| 6 | Unit theo chương trình | `GET/PUT /api/programs/{id}/units` |
+| 6 | Chủ đề giáo dục theo chương trình | `GET/PUT /api/programs/{id}/units` |
 | 7 | Nhập / xuất chương trình | `POST /api/programs/import`, `GET /api/programs/export` |
 | 8 | Quản lý lớp, đóng lớp | `GET/POST /api/classes`, `GET/PUT /api/classes/{id}`, `POST /api/classes/{id}/close` |
 | 9 | Lịch học của lớp | `GET/PUT /api/classes/{id}/schedule` |
 | 10 | Nhân sự lớp | `GET/POST /api/classes/{id}/teachers`, `DELETE /api/classes/{id}/teachers/{teacherId}`, `PUT /api/classes/{id}/teachers/main` |
-| 11 | Roster, thêm học viên | `GET/POST /api/classes/{id}/students` |
-| 12 | Chuyển cấp / thăng cấp | `POST /api/classes/{id}/promotion` |
+| 11 | Roster, thêm học sinh | `GET/POST /api/classes/{id}/students` |
+| 12 | Lên lớp | `POST /api/classes/{id}/promotion` |
 | 13 | Sinh buổi học tự động | `POST /api/classes/{id}/sessions/generate` (hoặc truyền `schedule` khi tạo lớp) |
 | 14 | Buổi học theo lớp | `GET /api/classes/{id}/sessions` |
 | 15 | Buổi dạy của giáo viên | `GET /api/sessions/my`, `GET /api/teachers/{teacherId}/sessions` |
 | 16 | Cập nhật buổi học | `GET/PUT /api/sessions/{id}` |
 | 17 | Nhận xét theo buổi | `GET/PUT /api/sessions/{id}/feedback` |
-| 18 | Điểm theo buổi | `PUT /api/sessions/{id}/scores` |
+| 18 | Đánh giá phát triển theo buổi | `PUT /api/sessions/{id}/scores` |
 | 19 | Nhập nhận xét hàng loạt | `POST /api/feedback/import` |
-| 20 | Lịch sử nhận xét/điểm học viên | `GET /api/students/{id}/assessments` |
+| 20 | Lịch sử nhận xét/đánh giá học sinh | `GET /api/students/{id}/assessments` |
 | 21 | Chuyên cần theo ghi danh | `GET /api/enrollments/{id}/attendance` |
 | 22 | Xuất phản hồi, tải tệp mẫu | `GET /api/feedback/export`, `GET /api/feedback/template` |
-| 23 | Hồ sơ học viên | `GET/POST /api/students`, `GET/PUT /api/students/{id}`, `GET /api/students/export` |
+| 23 | Hồ sơ học sinh | `GET/POST /api/students`, `GET/PUT /api/students/{id}`, `GET /api/students/export` |
 | 24 | Ghi danh, lịch sử học | `POST /api/enrollments`, `GET /api/enrollments/{id}`, `GET /api/students/{id}/enrollments` |
 | 25 | Trạng thái học tập, chuyển lớp | `PATCH /api/enrollments/{id}/status`, `POST /api/enrollments/{id}/transfer` |
 | 26 | Gói học phí | `GET/POST /api/fee-plans`, `GET/PUT/DELETE /api/fee-plans/{id}` |
 | 27 | Hóa đơn học phí | `GET/POST /api/invoices`, `GET/PUT /api/invoices/{id}`, `POST /api/invoices/{id}/issue`, `POST /api/invoices/{id}/cancel` |
 | 28 | Thanh toán, phiếu thu | `POST /api/invoices/{id}/payments`, `GET /api/payments`, `GET /api/payments/{id}/receipt` |
 | 29 | Tình trạng đã đóng/chưa đóng | `GET /api/finance/payment-status?state=PAID\|UNPAID\|NO_INVOICE` |
-| 30 | Tài chính theo học viên | `GET /api/students/{id}/finance` |
+| 30 | Tài chính theo học sinh | `GET /api/students/{id}/finance` |
 | 31 | Xuất báo cáo tài chính | `GET /api/finance/export` |
 | 32 | Danh sách học thử | `GET/POST /api/trial-leads`, `GET/PUT /api/trial-leads/{id}`, `PATCH /api/trial-leads/{id}/status`, `GET /api/trial-leads/export` |
 | 33 | Xếp lịch học thử | `POST /api/trial-leads/{id}/schedule`, `PATCH /api/trial-leads/{id}/schedule/result`, `POST /api/trial-leads/{id}/schedule/cancel` |
-| 34 | Chuyển đổi thành học viên | `POST /api/trial-leads/{id}/convert` |
+| 34 | Chuyển đổi thành học sinh | `POST /api/trial-leads/{id}/convert` |
 | 35 | Nhật ký hệ thống | `GET /api/audit-logs` |
 | 36 | Thông báo nội bộ | `GET /api/notifications/me`, `GET /api/notifications/me/unread-count`, `PATCH /api/notifications/{id}`, `POST /api/notifications/me/read-all`, `POST /api/notifications` |
 | 37 | Reset dữ liệu demo | `POST /api/system/demo/reset` |
@@ -148,19 +157,19 @@ Mọi API (trừ login/refresh) yêu cầu header `Authorization: Bearer <access
 | ROOT | Toàn quyền, quản lý người dùng/vai trò, reset demo |
 | DIRECTOR | Xem toàn bộ dữ liệu, báo cáo, audit log |
 | ACADEMIC | Chương trình, lớp, lịch, phân công giáo viên, ghi danh, chuyển lớp |
-| SALES | Học thử, xếp lịch học thử, chuyển đổi, tạo hồ sơ học viên |
+| SALES | Học thử, xếp lịch học thử, chuyển đổi, tạo hồ sơ học sinh |
 | ACCOUNTANT | Gói học phí, hóa đơn, thanh toán, báo cáo tài chính |
-| TEACHER | Chỉ xem buổi mình dạy/dạy thay và nhập nhận xét/điểm cho các buổi đó |
+| TEACHER | Chỉ xem buổi mình dạy/dạy thay và nhập nhận xét/đánh giá cho các buổi đó |
 
 ## Quy tắc nghiệp vụ chính
 
-- Sinh buổi học theo chương trình: mỗi unit 7 lesson chia 4 buổi (1&2, 3, 4&5, 6&7). Sau mỗi 2 unit có buổi TEST, sau unit 6 là MIDTERM, sau unit 12 là FINAL. Số ngày học/tuần phải bằng `sessions_per_week`.
+- Sinh buổi học theo chương trình: mỗi chủ đề (unit) có 7 hoạt động (lesson) chia 4 buổi (1&2, 3, 4&5, 6&7). Sau mỗi 2 chủ đề có buổi đánh giá chủ đề (TEST), sau chủ đề 6 là đánh giá giữa kỳ (MIDTERM), sau chủ đề 12 là đánh giá cuối kỳ (FINAL). Số ngày học/tuần phải bằng `sessions_per_week`.
 - Sĩ số được kiểm tra trong transaction có khóa dòng lớp (`SELECT … FOR UPDATE`) khi ghi danh, chuyển lớp, thăng cấp và chuyển đổi học thử.
 - Thanh toán khóa dòng hóa đơn, không cho trả vượt công nợ. Hóa đơn tự chuyển PAID khi đã trả đủ.
 - Job nền chuyển hóa đơn ISSUED quá hạn sang OVERDUE và gửi thông báo cho Kế toán.
-- Buổi học đã có nhận xét/điểm thì bị khóa: không đổi ngày, không đổi loại buổi, không bị dời lịch hay đổi giáo viên hàng loạt.
+- Buổi học đã có nhận xét/đánh giá thì bị khóa: không đổi ngày, không đổi loại buổi, không bị dời lịch hay đổi giáo viên hàng loạt.
 - Nhận xét/điểm chỉ do giáo viên dạy chính (hoặc dạy thay) của buổi nhập, chỉ từ ngày học trở đi và khi lớp chưa đóng. Tệp import được kiểm tra toàn bộ, báo lỗi theo từng dòng (HTTP 422) và chỉ ghi khi không có lỗi.
-- Audit log ghi lại các thay đổi nhạy cảm: tài khoản/vai trò, nhận xét/điểm, import/export, ghi danh, hóa đơn/thanh toán, học thử, reset demo.
+- Audit log ghi lại các thay đổi nhạy cảm: tài khoản/vai trò, nhận xét/đánh giá, import/export, ghi danh, hóa đơn/thanh toán, học thử, reset demo.
 - Đăng xuất thu hồi mọi refresh token đã cấp trước thời điểm đăng xuất.
 - Reset demo chỉ chạy khi `DEMO_ENABLED=true` và chỉ ROOT được gọi. Tài khoản ROOT được giữ lại.
 
@@ -169,11 +178,11 @@ Mọi API (trừ login/refresh) yêu cầu header `Authorization: Bearer <access
 | Vai trò | Màn hình |
 |---|---|
 | Tất cả | Đăng nhập, tổng quan, thông báo (đánh dấu đã đọc) |
-| Giáo viên | Lịch dạy của tôi, nhập nhận xét/điểm theo buổi, tải tệp mẫu, nhập Excel |
-| Học vụ | Chương trình & unit, lớp học (học viên, buổi học, lịch học, giáo viên, chuyển cấp), lịch giáo viên, học viên & ghi danh |
-| Tuyển sinh | Lead học thử, xếp lịch, ghi nhận kết quả, chuyển đổi thành học viên |
+| Giáo viên | Lịch dạy của tôi, nhập nhận xét/đánh giá theo buổi, tải tệp mẫu, nhập Excel |
+| Giáo vụ | Chương trình & chủ đề, lớp học (học sinh, buổi học, lịch học, giáo viên, lên lớp), lịch giáo viên, học sinh & ghi danh |
+| Tuyển sinh | Đăng ký học thử, xếp lịch, ghi nhận kết quả, chuyển đổi thành học sinh |
 | Kế toán | Gói học phí, hóa đơn, thanh toán & phiếu thu (in được), công nợ, xuất báo cáo |
-| Giám đốc / Root | Toàn bộ màn hình xem, người dùng & phân quyền, nhật ký hệ thống, reset demo |
+| Hiệu trưởng / Root | Toàn bộ màn hình xem, người dùng & phân quyền, nhật ký hệ thống, reset demo |
 
 Menu và nút thao tác hiển thị theo vai trò. Backend vẫn kiểm tra lại toàn bộ quyền.
 
@@ -188,14 +197,14 @@ npm run dev        # http://localhost:5173, tự proxy /api tới http://localho
 ## Lệnh phát triển backend (không cần cài .NET SDK)
 
 ```bash
-docker run --rm -v "$PWD":/src -w /src mcr.microsoft.com/dotnet/sdk:8.0 dotnet build EIM.sln
+docker run --rm -v "$PWD":/src -w /src mcr.microsoft.com/dotnet/sdk:8.0 dotnet build TLighthouse.sln
 
 docker run --rm -v "$PWD":/src -w /src mcr.microsoft.com/dotnet/sdk:8.0 bash -c \
   "dotnet tool install -g dotnet-ef --version 8.0.11 && ~/.dotnet/tools/dotnet-ef dbcontext script \
-   -p src/EIM.Infrastructure -s src/EIM.Api -o database/schema.sql"
+   -p src/TLighthouse.Infrastructure -s src/TLighthouse.Api -o database/schema.sql"
 
 docker compose exec mysql sh -c 'mysqldump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --no-tablespaces \
-  --single-transaction --default-character-set=utf8mb4 "$MYSQL_DATABASE"' > database/eim_dump.sql
+  --single-transaction --default-character-set=utf8mb4 "$MYSQL_DATABASE"' > database/tlighthouse_dump.sql
 ```
 
 ## Kiểm thử đã thực hiện

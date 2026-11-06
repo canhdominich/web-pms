@@ -28,8 +28,8 @@ export function DashboardPage() {
       <PageHeader title={`Xin chào, ${user?.fullName}`} subtitle={user?.roles.map((r) => roleNames[r] ?? r).join(' · ')} />
       <div className="stats">
         {staff && <Stat label="Lớp đang hoạt động" value={classes.data?.total ?? '…'} icon={<School size={20} />} />}
-        {staff && <Stat label="Học viên" value={students.data?.total ?? '…'} icon={<GraduationCap size={20} />} tone="green" />}
-        {trials && <Stat label="Lead học thử mới" value={leads.data?.total ?? '…'} icon={<UserPlus size={20} />} tone="purple" />}
+        {staff && <Stat label="Học sinh" value={students.data?.total ?? '…'} icon={<GraduationCap size={20} />} tone="green" />}
+        {trials && <Stat label="Đăng ký học thử mới" value={leads.data?.total ?? '…'} icon={<UserPlus size={20} />} tone="purple" />}
         {finance && <Stat label="Hóa đơn quá hạn" value={overdue.data?.total ?? '…'} icon={<AlertTriangle size={20} />} tone="red" />}
         {finance && <Stat label="Ghi danh chưa đóng đủ" value={unpaid.data?.total ?? '…'} icon={<Wallet size={20} />} tone="amber" />}
         {teacher && <Stat label="Buổi dạy 14 ngày tới" value={sessions.data?.length ?? '…'} icon={<CalendarDays size={20} />} />}
@@ -45,7 +45,7 @@ export function DashboardPage() {
               columns={[
                 { header: 'Ngày', cell: (s) => fmtWeekday(s.sessionDate) },
                 { header: 'Lớp', cell: (s) => s.classCode },
-                { header: 'Unit/Lesson', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
+                { header: 'Chủ đề/Hoạt động', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
                 { header: 'Loại', cell: (s) => <Badge value={s.sessionType} /> },
               ]}
             />
@@ -54,7 +54,7 @@ export function DashboardPage() {
           <Card title="Lối tắt">
             <div className="actions">
               {staff && <Link className="btn btn-secondary" to="/classes">Lớp học</Link>}
-              {staff && <Link className="btn btn-secondary" to="/students">Học viên</Link>}
+              {staff && <Link className="btn btn-secondary" to="/students">Học sinh</Link>}
               {trials && <Link className="btn btn-secondary" to="/trials">Học thử</Link>}
               {finance && <Link className="btn btn-secondary" to="/invoices">Hóa đơn</Link>}
               {finance && <Link className="btn btn-secondary" to="/payment-status">Công nợ</Link>}

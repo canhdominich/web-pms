@@ -10,11 +10,11 @@ import { fmtDate, fmtLesson, fmtWeekday, label } from '../../lib/format';
 import { RoleSets } from '../../lib/roles';
 
 type FeedbackRow = { studentId: string; studentName: string; attendance: string; homework: string; participation: string; behavior: string; commentText: string };
-type ScoreRow = { studentId: string; studentName: string; listening: string; reading: string; writing: string; speaking: string; total: string };
+type ScoreRow = { studentId: string; studentName: string; language: string; cognitive: string; physical: string; social: string; total: string };
 
 const toNumber = (v: string) => (v === '' ? null : Number(v));
 
-const scoreLabels = { listening: 'Nghe', reading: 'Đọc', writing: 'Viết', speaking: 'Nói', total: 'Tổng' } as const;
+const scoreLabels = { language: 'Ngôn ngữ', cognitive: 'Nhận thức', physical: 'Thể chất', social: 'Tình cảm - XH', total: 'Tổng' } as const;
 
 export function SessionDetailPage() {
   const { id = '' } = useParams();
@@ -39,10 +39,10 @@ export function SessionDetailPage() {
     const scoreRows = form.data.rows.map((r) => ({
         studentId: r.studentId,
         studentName: r.studentName,
-        listening: r.score?.listening?.toString() ?? '',
-        reading: r.score?.reading?.toString() ?? '',
-        writing: r.score?.writing?.toString() ?? '',
-        speaking: r.score?.speaking?.toString() ?? '',
+        language: r.score?.language?.toString() ?? '',
+        cognitive: r.score?.cognitive?.toString() ?? '',
+        physical: r.score?.physical?.toString() ?? '',
+        social: r.score?.social?.toString() ?? '',
         total: r.score?.total?.toString() ?? '',
       }));
     setFeedback(feedbackRows);
@@ -68,17 +68,17 @@ export function SessionDetailPage() {
     () =>
       http.put(`/sessions/${id}/scores`, {
         items: scores
-          .filter((s) => [s.listening, s.reading, s.writing, s.speaking, s.total].some((v) => v !== ''))
+          .filter((s) => [s.language, s.cognitive, s.physical, s.social, s.total].some((v) => v !== ''))
           .map((s) => ({
             studentId: s.studentId,
-            listening: toNumber(s.listening),
-            reading: toNumber(s.reading),
-            writing: toNumber(s.writing),
-            speaking: toNumber(s.speaking),
+            language: toNumber(s.language),
+            cognitive: toNumber(s.cognitive),
+            physical: toNumber(s.physical),
+            social: toNumber(s.social),
             total: toNumber(s.total),
           })),
       }),
-    { success: 'Đã lưu điểm' },
+    { success: 'Đã lưu đánh giá' },
   );
 
   if (!detail.data) return <LoadState error={detail.error} back={can(RoleSets.Staff) ? { to: '/classes', label: 'Danh sách lớp' } : { to: '/my-sessions', label: 'Lịch dạy của tôi' }} />;
@@ -125,9 +125,9 @@ export function SessionDetailPage() {
         can(RoleSets.AssessmentUsers) ? (
           <Spinner />
         ) : (
-          <Card title={`Danh sách học viên buổi học (${detail.data.roster.length})`}>
+          <Card title={`Danh sách học sinh buổi học (${detail.data.roster.length})`}>
             {detail.data.roster.length === 0 ? (
-              <Empty text="Không có học viên" />
+              <Empty text="Không có học sinh" />
             ) : (
               <ul className="list">
                 {detail.data.roster.map((r) => (
@@ -162,15 +162,15 @@ export function SessionDetailPage() {
             }
           >
             {feedback.length === 0 ? (
-              <Empty text="Không có học viên trong buổi học này" />
+              <Empty text="Không có học sinh trong buổi học này" />
             ) : (
               <div className="table-wrap">
                 <table className="table feedback-table">
                   <thead>
                     <tr>
-                      <th>Học viên</th>
+                      <th>Học sinh</th>
                       <th>Chuyên cần</th>
-                      <th>Bài tập</th>
+                      <th>Hoạt động tại nhà</th>
                       <th>Tham gia</th>
                       <th>Thái độ</th>
                       <th>Nhận xét</th>
@@ -191,7 +191,7 @@ export function SessionDetailPage() {
                             ))}
                           </select>
                         </td>
-                        <td data-label="Bài tập">
+                        <td data-label="Hoạt động tại nhà">
                           <select className="input input-sm" disabled={!editable} value={r.homework} onChange={(e) => updateFeedback(i, { homework: e.target.value })}>
                             <option value="">—</option>
                             <option value="DONE">{label('DONE')}</option>
@@ -199,10 +199,10 @@ export function SessionDetailPage() {
                           </select>
                         </td>
                         <td data-label="Tham gia">
-                          <input className="input input-sm" disabled={!editable} placeholder="VD: Tích cực phát biểu" value={r.participation} onChange={(e) => updateFeedback(i, { participation: e.target.value })} />
+                          <input className="input input-sm" disabled={!editable} placeholder="VD: Hào hứng tham gia hoạt động" value={r.participation} onChange={(e) => updateFeedback(i, { participation: e.target.value })} />
                         </td>
                         <td data-label="Thái độ">
-                          <input className="input input-sm" disabled={!editable} placeholder="VD: Ngoan, tập trung" value={r.behavior} onChange={(e) => updateFeedback(i, { behavior: e.target.value })} />
+                          <input className="input input-sm" disabled={!editable} placeholder="VD: Ngoan, vui vẻ, hòa đồng" value={r.behavior} onChange={(e) => updateFeedback(i, { behavior: e.target.value })} />
                         </td>
                         <td data-label="Nhận xét" className="cell-wide">
                           <textarea className="input input-sm" rows={1} disabled={!editable} placeholder="Nhận xét chung về buổi học" value={r.commentText} onChange={(e) => updateFeedback(i, { commentText: e.target.value })} />
@@ -222,18 +222,18 @@ export function SessionDetailPage() {
                   <>
                     {scoresDirty && <span className="badge badge-amber">Có thay đổi chưa lưu</span>}
                     <button className="btn btn-primary" disabled={saveScores.isPending} onClick={() => saveScores.mutate(undefined)}>
-                      <Save size={16} /> {saveScores.isPending ? 'Đang lưu...' : 'Lưu điểm'}
+                      <Save size={16} /> {saveScores.isPending ? 'Đang lưu...' : 'Lưu đánh giá'}
                     </button>
                   </>
                 )
               }
             >
-              <p className="muted small">Thang điểm 0–100. Để trống tổng điểm để hệ thống tính trung bình các kỹ năng.</p>
+              <p className="muted small">Thang đánh giá 0–100 theo mức độ phát triển. Để trống ô Tổng để hệ thống tính trung bình 4 lĩnh vực.</p>
               <div className="table-wrap">
                 <table className="table feedback-table">
                   <thead>
                     <tr>
-                      <th>Học viên</th>
+                      <th>Học sinh</th>
                       <th>Nghe</th>
                       <th>Đọc</th>
                       <th>Viết</th>
@@ -247,7 +247,7 @@ export function SessionDetailPage() {
                         <td className="nowrap cell-title">
                           <strong>{r.studentName}</strong>
                         </td>
-                        {(['listening', 'reading', 'writing', 'speaking', 'total'] as const).map((k) => (
+                        {(['language', 'cognitive', 'physical', 'social', 'total'] as const).map((k) => (
                           <td key={k} data-label={scoreLabels[k]}>
                             <input
                               className="input input-sm"

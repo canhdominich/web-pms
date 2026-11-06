@@ -106,7 +106,7 @@ export function EnrollmentHistoryDialog({ enrollmentId, onClose, showAttendance 
         <div className="stack">
           <KeyValue
             items={[
-              ['Học viên', e.studentName],
+              ['Học sinh', e.studentName],
               ['Lớp', `${e.classCode} — ${e.className}`],
               ['Chương trình', e.programCode],
               ['Trạng thái', <Badge value={e.status} />],

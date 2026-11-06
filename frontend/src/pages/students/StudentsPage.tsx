@@ -16,7 +16,7 @@ export function StudentsPage() {
   const [creating, setCreating] = useState(false);
   const students = useGet<Paged<Student>>('/students', { ...filters, pageSize: 20 });
   const create = useAction((v: StudentValues) => http.post<Student>('/students', blankToNull(v)), {
-    success: 'Đã tạo hồ sơ học viên',
+    success: 'Đã tạo hồ sơ học sinh',
     onSuccess: (s) => {
       setCreating(false);
       navigate(`/students/${s.id}`);
@@ -26,14 +26,14 @@ export function StudentsPage() {
   return (
     <>
       <PageHeader
-        title="Học viên"
-        subtitle="Hồ sơ học viên, ghi danh và lịch sử học tập"
+        title="Học sinh"
+        subtitle="Hồ sơ học sinh, ghi danh và lịch sử học tập"
         actions={
           <>
             <DownloadButton url="/students/export" params={{ search: filters.search }} />
             <Can roles={RoleSets.StudentEditors}>
               <button className="btn btn-primary" onClick={() => setCreating(true)}>
-                <Plus size={16} /> Thêm học viên
+                <Plus size={16} /> Thêm học sinh
               </button>
             </Can>
           </>
@@ -43,7 +43,7 @@ export function StudentsPage() {
         <div className="toolbar">
           <div className="input-icon">
             <Search size={16} />
-            <input className="input" placeholder="Tìm theo tên, SĐT học viên/phụ huynh, email" value={filters.search} onChange={(e) => setFilters({ search: e.target.value, page: 1 })} />
+            <input className="input" placeholder="Tìm theo tên, SĐT học sinh/phụ huynh, email" value={filters.search} onChange={(e) => setFilters({ search: e.target.value, page: 1 })} />
           </div>
         </div>
         <DataTable
@@ -64,7 +64,7 @@ export function StudentsPage() {
       </Card>
       <Modal
         open={creating}
-        title="Thêm học viên"
+        title="Thêm học sinh"
         onClose={() => setCreating(false)}
         footer={
           <button className="btn btn-primary" form="create-student" disabled={create.isPending}>

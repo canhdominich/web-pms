@@ -17,7 +17,7 @@ export function TrialLeadForm({ id, initial, onSubmit }: { id: string; initial?:
   });
   return (
     <form id={id} className="form-grid" onSubmit={handleSubmit(onSubmit, onInvalid)}>
-      <Field label="Họ tên học viên / khách hàng" span>
+      <Field label="Họ tên bé / phụ huynh" span>
         <input className="input" required {...register('fullName', { required: true })} />
       </Field>
       <Field label="Số điện thoại">

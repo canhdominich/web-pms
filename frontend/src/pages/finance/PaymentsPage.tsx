@@ -38,7 +38,7 @@ export function PaymentsPage() {
           onRowClick={(p) => setReceiptId(p.id)}
           columns={[
             { header: 'Thời điểm', cell: (p) => fmtDateTime(p.paidAt) },
-            { header: 'Học viên', cell: (p) => <strong>{p.studentName}</strong> },
+            { header: 'Học sinh', cell: (p) => <strong>{p.studentName}</strong> },
             { header: 'Lớp', cell: (p) => p.classCode },
             { header: 'Số tiền', cell: (p) => fmtMoney(p.amount), className: 'right' },
             { header: 'Phương thức', cell: (p) => label(p.method) },

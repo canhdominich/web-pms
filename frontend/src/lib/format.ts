@@ -19,9 +19,9 @@ const statusNames: Record<string, string> = {
   TRANSFERRED: 'Đã chuyển lớp',
   GRADUATED: 'Hoàn thành',
   NORMAL: 'Buổi thường',
-  TEST: 'Kiểm tra',
-  MIDTERM: 'Giữa kỳ',
-  FINAL: 'Cuối kỳ',
+  TEST: 'Đánh giá chủ đề',
+  MIDTERM: 'Đánh giá giữa kỳ',
+  FINAL: 'Đánh giá cuối kỳ',
   DRAFT: 'Nháp',
   ISSUED: 'Đã phát hành',
   PAID: 'Đã thanh toán',
@@ -38,8 +38,8 @@ const statusNames: Record<string, string> = {
   PRESENT: 'Có mặt',
   ABSENT: 'Vắng',
   LATE: 'Đi muộn',
-  DONE: 'Đã làm',
-  NOT_DONE: 'Chưa làm',
+  DONE: 'Hoàn thành',
+  NOT_DONE: 'Chưa hoàn thành',
   CASH: 'Tiền mặt',
   TRANSFER: 'Chuyển khoản',
   CARD: 'Thẻ',
@@ -105,4 +105,4 @@ export const addDays = (days: number) => isoDate(new Date(Date.now() + days * 86
 export const blankToNull = <T extends Record<string, unknown>>(values: T): T =>
   Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v === '' ? null : v])) as T;
 
-export const fmtLesson = (unitNo: number, lessonNo: number) => `Unit ${unitNo} · Bài ${lessonNo}`;
+export const fmtLesson = (unitNo: number, lessonNo: number) => `Chủ đề ${unitNo} · Hoạt động ${lessonNo}`;

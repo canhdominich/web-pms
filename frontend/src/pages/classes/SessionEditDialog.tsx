@@ -38,7 +38,7 @@ export function SessionEditDialog({ session, onClose }: { session: Session | nul
       }
     >
       <form id="edit-session" className="form-grid" onSubmit={handleSubmit((v) => action.mutate(v), onInvalid)}>
-        {locked && <div className="notice span-2">Buổi học đã có nhận xét/điểm: không thể đổi ngày hoặc loại buổi.</div>}
+        {locked && <div className="notice span-2">Buổi học đã có nhận xét/đánh giá: không thể đổi ngày hoặc loại buổi.</div>}
         <Field label="Ngày học">
           <input className="input" type="date" disabled={locked} {...register('sessionDate')} />
         </Field>
@@ -51,10 +51,10 @@ export function SessionEditDialog({ session, onClose }: { session: Session | nul
             ))}
           </select>
         </Field>
-        <Field label="Unit">
+        <Field label="Chủ đề">
           <input className="input" type="number" min={1} {...register('unitNo', { valueAsNumber: true })} />
         </Field>
-        <Field label="Lesson">
+        <Field label="Hoạt động">
           <input className="input" type="number" min={1} {...register('lessonNo', { valueAsNumber: true })} />
         </Field>
         <Field label="Giáo viên chính" span>

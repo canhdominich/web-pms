@@ -28,7 +28,7 @@ export function ReceiptDialog({ paymentId, onClose }: { paymentId: string | null
           </div>
           <KeyValue
             items={[
-              ['Học viên', r.studentName],
+              ['Học sinh', r.studentName],
               ['Phụ huynh', r.guardianName],
               ['Lớp', `${r.classCode} — ${r.className}`],
               ['Thời điểm thu', fmtDateTime(r.paidAt)],

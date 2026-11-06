@@ -18,7 +18,7 @@ export function TrialsPage() {
   const [creating, setCreating] = useState(false);
   const leads = useGet<Paged<TrialLead>>('/trial-leads', { ...filters, pageSize: 20 });
   const create = useAction((v: LeadValues) => http.post<TrialLead>('/trial-leads', blankToNull(v)), {
-    success: 'Đã tạo lead học thử',
+    success: 'Đã tạo đăng ký học thử',
     onSuccess: (lead) => {
       setCreating(false);
       navigate(`/trials/${lead.id}`);
@@ -29,7 +29,7 @@ export function TrialsPage() {
     <>
       <PageHeader
         title="Tuyển sinh học thử"
-        subtitle="Tiếp nhận lead, xếp lịch học thử và chuyển đổi thành học viên chính thức"
+        subtitle="Tiếp nhận đăng ký, xếp lịch học thử và chuyển đổi thành học sinh chính thức"
         actions={
           <>
             <DownloadButton url="/trial-leads/export" params={filters} />
@@ -76,7 +76,7 @@ export function TrialsPage() {
       </Card>
       <Modal
         open={creating}
-        title="Thêm lead học thử"
+        title="Thêm đăng ký học thử"
         onClose={() => setCreating(false)}
         footer={
           <button className="btn btn-primary" form="create-lead" disabled={create.isPending}>

@@ -16,7 +16,7 @@ export function SessionTable({ sessions, loading }: { sessions?: Session[]; load
         { header: 'Ngày', cell: (s) => fmtWeekday(s.sessionDate) },
         { header: 'Lớp', cell: (s) => <strong>{s.classCode}</strong> },
         { header: 'Phòng', cell: (s) => s.room ?? '—' },
-        { header: 'Unit / Lesson', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
+        { header: 'Chủ đề / Hoạt động', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
         { header: 'Loại', cell: (s) => <Badge value={s.sessionType} /> },
         { header: 'Phân công', cell: (s) => (s.coverTeacherName ? <Badge value="COVER" text={`Dạy thay: ${s.coverTeacherName}`} /> : s.mainTeacherName ?? '—') },
         { header: 'Nhận xét', cell: (s) => s.feedbackCount, className: 'right' },

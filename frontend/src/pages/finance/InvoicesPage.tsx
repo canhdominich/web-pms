@@ -57,7 +57,7 @@ export function InvoicesPage() {
           rowKey={(i) => i.id}
           onRowClick={(i) => setSelected(i.id)}
           columns={[
-            { header: 'Học viên', cell: (i) => <strong>{i.studentName}</strong> },
+            { header: 'Học sinh', cell: (i) => <strong>{i.studentName}</strong> },
             { header: 'Lớp', cell: (i) => i.classCode },
             { header: 'Số tiền', cell: (i) => fmtMoney(i.amount), className: 'right' },
             { header: 'Đã trả', cell: (i) => fmtMoney(i.paidAmount), className: 'right' },
@@ -104,7 +104,7 @@ function CreateInvoiceDialog({ open, onClose, onCreated }: { open: boolean; onCl
       }
     >
       <div className="form-grid">
-        <Field group label="Học viên" span>
+        <Field group label="Học sinh" span>
           <StudentPicker value={student} onChange={(s) => { setStudent(s); setForm({ ...form, enrollmentId: '' }); }} />
         </Field>
         <Field label="Ghi danh" span>
@@ -163,7 +163,7 @@ function InvoiceDialog({ invoiceId, editable, onClose }: { invoiceId: string | n
         <div className="stack">
           <KeyValue
             items={[
-              ['Học viên', inv.studentName],
+              ['Học sinh', inv.studentName],
               ['Lớp', inv.classCode],
               ['Số tiền', fmtMoney(inv.amount)],
               ['Đã trả', fmtMoney(inv.paidAmount)],

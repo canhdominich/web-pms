@@ -19,7 +19,7 @@ export function PageHeader({
 }) {
   const pageTitle = documentTitle ?? (typeof title === 'string' ? title : undefined);
   useEffect(() => {
-    if (pageTitle) document.title = `${pageTitle} · EIM Center`;
+    if (pageTitle) document.title = `${pageTitle} · T-Lighthouse`;
   }, [pageTitle]);
   return (
     <div className="page-header">

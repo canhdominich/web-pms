@@ -77,7 +77,7 @@ export function StudentPicker({ value, onChange }: { value: Student | null; onCh
       {search.trim().length >= 2 && (
         <ul className="picker-list">
           {isFetching && <li className="muted">Đang tìm...</li>}
-          {!isFetching && data?.items.length === 0 && <li className="muted">Không tìm thấy học viên</li>}
+          {!isFetching && data?.items.length === 0 && <li className="muted">Không tìm thấy học sinh</li>}
           {data?.items.map((s) => (
             <li key={s.id}>
               <button type="button" onClick={() => onChange(s)}>

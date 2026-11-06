@@ -25,9 +25,9 @@ export function SessionsTab({ classId, editable }: { classId: string; editable: 
         <select className="input" value={filters.sessionType} onChange={(e) => setFilters({ ...filters, sessionType: e.target.value })}>
           <option value="">Tất cả loại buổi</option>
           <option value="NORMAL">Buổi thường</option>
-          <option value="TEST">Kiểm tra</option>
-          <option value="MIDTERM">Giữa kỳ</option>
-          <option value="FINAL">Cuối kỳ</option>
+          <option value="TEST">Đánh giá chủ đề</option>
+          <option value="MIDTERM">Đánh giá giữa kỳ</option>
+          <option value="FINAL">Đánh giá cuối kỳ</option>
         </select>
       </div>
       <DataTable
@@ -39,7 +39,7 @@ export function SessionsTab({ classId, editable }: { classId: string; editable: 
         columns={[
           { header: '#', cell: (s) => (sessions.data?.indexOf(s) ?? 0) + 1 },
           { header: 'Ngày', cell: (s) => <span className={s.sessionDate === now ? 'unread' : ''}>{fmtWeekday(s.sessionDate)}</span> },
-          { header: 'Unit / Lesson', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
+          { header: 'Chủ đề / Hoạt động', cell: (s) => fmtLesson(s.unitNo, s.lessonNo) },
           { header: 'Loại', cell: (s) => <Badge value={s.sessionType} /> },
           { header: 'GV chính', cell: (s) => s.mainTeacherName ?? <span className="muted">Chưa phân công</span> },
           { header: 'GV dạy thay', cell: (s) => s.coverTeacherName ?? '—' },

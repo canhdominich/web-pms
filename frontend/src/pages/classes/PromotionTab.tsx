@@ -18,17 +18,17 @@ export function PromotionTab({ detail, editable }: { detail: ClassDetail; editab
         enrollmentIds: selected,
         closeSourceClass: form.closeSourceClass,
       }),
-    { success: 'Đã chuyển cấp học viên' },
+    { success: 'Đã chuyển học sinh lên lớp' },
   );
 
   if (!editable) return <Empty text="Bạn không có quyền hoặc lớp đã đóng" />;
   const toggle = (id: string) => setSelected(selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id]);
 
   return (
-    <Card title="Chuyển cấp / thăng cấp lớp">
+    <Card title="Lên lớp">
       <div className="stack">
         <p className="muted">Ghi danh hiện tại chuyển sang Hoàn thành và tạo ghi danh mới ở lớp đích (kiểm tra sĩ số).</p>
-        <Field group label={`Học viên chuyển cấp (${selected.length}/${active.length})`}>
+        <Field group label={`Học sinh lên lớp (${selected.length}/${active.length})`}>
           <div className="checks">
             {active.map((r) => (
               <label key={r.enrollmentId} className="check">
@@ -46,12 +46,12 @@ export function PromotionTab({ detail, editable }: { detail: ClassDetail; editab
           </Field>
           <label className="check span-2">
             <input type="checkbox" checked={form.closeSourceClass} onChange={(e) => setForm({ ...form, closeSourceClass: e.target.checked })} />
-            Đóng lớp hiện tại sau khi chuyển cấp
+            Đóng lớp hiện tại sau khi lên lớp
           </label>
         </div>
         <div>
           <button className="btn btn-primary" disabled={!form.targetClassId || selected.length === 0 || action.isPending} onClick={() => action.mutate(undefined)}>
-            Thực hiện chuyển cấp
+            Thực hiện lên lớp
           </button>
         </div>
       </div>

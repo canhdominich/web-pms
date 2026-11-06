@@ -1,7 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import type { AuthResponse, TokenPair } from './types';
 
-const STORAGE_KEY = 'eim.tokens';
+const STORAGE_KEY = 'tlighthouse.tokens';
 
 export const tokenStore = {
   get(): TokenPair | null {

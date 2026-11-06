@@ -6,7 +6,7 @@ import { useAuth } from '../auth/AuthContext';
 import { errorMessage } from '../api/client';
 import { Field } from '../components/ui';
 
-const demoAccounts = ['director', 'academic', 'sales', 'accountant', 'teacher1', 'teacher2'];
+const demoAccounts = ['hieutruong', 'giaovu', 'tuyensinh', 'ketoan', 'giaovien1', 'giaovien2'];
 
 export function LoginPage() {
   const { user, login } = useAuth();
@@ -30,18 +30,18 @@ export function LoginPage() {
   return (
     <div className="login">
       <div className="login-hero">
-        <div className="brand-logo">EIM</div>
+        <div className="brand-logo">TL</div>
         <div>
-          <h1>Hệ thống quản lý trung tâm Anh ngữ EIM</h1>
-          <p>Quản lý chương trình đào tạo, lớp học, buổi học, đánh giá học viên, tuyển sinh học thử và tài chính học vụ trên một nền tảng thống nhất.</p>
+          <h1>Hệ thống quản lý đào tạo trường mầm non T-Lighthouse</h1>
+          <p>Quản lý chương trình giáo dục, lớp học, hoạt động hằng ngày, nhận xét và đánh giá sự phát triển của bé, tuyển sinh học thử và học phí trên một nền tảng thống nhất.</p>
         </div>
-        <span className="small">© EIM Center</span>
+        <span className="small">© Trường mầm non T-Lighthouse</span>
       </div>
       <div className="login-panel">
         <form className="login-form" onSubmit={submit}>
           <div>
             <h1>Đăng nhập</h1>
-            <p className="muted">Sử dụng tài khoản được trung tâm cấp</p>
+            <p className="muted">Sử dụng tài khoản do nhà trường cấp</p>
           </div>
           <Field label="Email">
             <input className="input" type="email" autoComplete="username" required {...register('email', { required: true })} />
@@ -61,11 +61,11 @@ export function LoginPage() {
                   key={a}
                   type="button"
                   onClick={() => {
-                    setValue('email', `${a}@eim.local`);
+                    setValue('email', `${a}@tlighthouse.local`);
                     setValue('password', 'Demo@12345');
                   }}
                 >
-                  {a}@eim.local
+                  {a}@tlighthouse.local
                 </button>
               ))}
             </div>

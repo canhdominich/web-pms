@@ -23,7 +23,7 @@ export function ProgramsPage() {
     <>
       <PageHeader
         title="Chương trình đào tạo"
-        subtitle="Cấu trúc unit/lesson và quy tắc kiểm tra áp dụng khi sinh buổi học"
+        subtitle="Cấu trúc chủ đề/hoạt động và quy tắc đánh giá áp dụng khi sinh buổi học"
         actions={
           <>
             <DownloadButton url="/programs/export" />
@@ -51,9 +51,9 @@ export function ProgramsPage() {
           columns={[
             { header: 'Mã', cell: (p) => <strong>{p.code}</strong> },
             { header: 'Tên chương trình', cell: (p) => p.name },
-            { header: 'Cấp độ', cell: (p) => p.level },
-            { header: 'Số unit', cell: (p) => p.totalUnits, className: 'right' },
-            { header: 'Bài/unit', cell: (p) => p.lessonsPerUnit, className: 'right' },
+            { header: 'Độ tuổi', cell: (p) => p.level },
+            { header: 'Số chủ đề', cell: (p) => p.totalUnits, className: 'right' },
+            { header: 'Hoạt động/chủ đề', cell: (p) => p.lessonsPerUnit, className: 'right' },
             { header: 'Buổi/tuần', cell: (p) => p.sessionsPerWeek, className: 'right' },
             { header: 'Học phí mặc định', cell: (p) => (p.feePlanAmount ? fmtMoney(p.feePlanAmount) : '—'), className: 'right' },
             { header: 'Lớp đang mở', cell: (p) => p.activeClassCount, className: 'right' },
@@ -68,7 +68,7 @@ export function ProgramsPage() {
 
 function CreateProgramDialog({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: (id: string) => void }) {
   const { register, handleSubmit, reset } = useForm<ProgramForm>({
-    defaultValues: { code: '', name: '', level: '', totalUnits: 12, lessonsPerUnit: 7, sessionsPerWeek: 2 },
+    defaultValues: { code: '', name: '', level: '', totalUnits: 12, lessonsPerUnit: 7, sessionsPerWeek: 5 },
   });
   const action = useAction((v: ProgramForm) => http.post<ProgramDetail>('/programs', v), {
     success: 'Đã tạo chương trình',
@@ -99,10 +99,10 @@ function CreateProgramDialog({ open, onClose, onCreated }: { open: boolean; onCl
         <Field label="Tên chương trình" span>
           <input className="input" required {...register('name', { required: true })} />
         </Field>
-        <Field label="Tổng số unit">
+        <Field label="Tổng số chủ đề">
           <input className="input" type="number" min={1} max={50} {...register('totalUnits', { valueAsNumber: true })} />
         </Field>
-        <Field label="Số bài mỗi unit">
+        <Field label="Số hoạt động mỗi chủ đề">
           <input className="input" type="number" min={1} max={20} {...register('lessonsPerUnit', { valueAsNumber: true })} />
         </Field>
         <Field label="Số buổi mỗi tuần">
