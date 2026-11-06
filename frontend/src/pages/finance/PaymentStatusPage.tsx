@@ -7,6 +7,7 @@ import { DownloadButton } from '../../components/FileActions';
 import { ClassSelect } from '../../components/pickers';
 import { Badge, Card, DataTable, Field, PageHeader, Pagination } from '../../components/ui';
 import { fmtMoney } from '../../lib/format';
+import { DateInput } from '../../components/DateInput';
 
 export function PaymentStatusPage() {
   const [filters, setFilters] = useState({ classId: '', state: '', search: '', page: 1 });
@@ -50,10 +51,10 @@ export function PaymentStatusPage() {
       <Card title="Xuất báo cáo tài chính" actions={<DownloadButton url="/finance/export" params={report} label="Xuất báo cáo" />}>
         <div className="form-grid">
           <Field label="Từ ngày" hint="Lọc theo hạn hóa đơn và ngày thanh toán">
-            <input className="input" type="date" value={report.from} onChange={(e) => setReport({ ...report, from: e.target.value })} />
+            <DateInput value={report.from} onChange={(e) => setReport({ ...report, from: e.target.value })} />
           </Field>
           <Field label="Đến ngày">
-            <input className="input" type="date" value={report.to} onChange={(e) => setReport({ ...report, to: e.target.value })} />
+            <DateInput value={report.to} onChange={(e) => setReport({ ...report, to: e.target.value })} />
           </Field>
           <Field label="Lớp" span>
             <ClassSelect activeOnly={false} placeholder="Tất cả lớp" value={report.classId} onChange={(e) => setReport({ ...report, classId: e.target.value })} />

@@ -7,11 +7,11 @@ export type TokenPair = {
   refreshTokenExpiresAt: string;
 };
 
-export type CurrentUser = { id: string; email: string; fullName: string; status: string; roles: string[] };
+export type CurrentUser = { id: string; email: string; fullName: string; status: string; role: string };
 export type AuthResponse = { tokens: TokenPair; user: CurrentUser };
 
-export type User = { id: string; email: string; fullName: string; status: string; createdAt: string; roles: string[] };
-export type Role = { id: string; code: string; name: string; userCount: number };
+export type User = { id: string; email: string; fullName: string; status: string; createdAt: string; role: string };
+export type Role = { code: string; name: string; userCount: number };
 export type Teacher = { id: string; fullName: string; email: string };
 
 export type Program = {

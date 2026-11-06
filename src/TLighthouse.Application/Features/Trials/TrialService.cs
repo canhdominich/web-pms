@@ -259,7 +259,7 @@ internal sealed class TrialService(
     }
 
     private string? AppendNote(string? current, string? addition) =>
-        addition.Clean() is { } note ? string.Join(Environment.NewLine, new[] { current, $"[{clock.UtcNow:yyyy-MM-dd HH:mm}] {note}" }.OfType<string>()) : current;
+        addition.Clean() is { } note ? string.Join(Environment.NewLine, new[] { current, $"[{clock.UtcNow:dd/MM/yyyy HH:mm}] {note}" }.OfType<string>()) : current;
 
     private static object Snapshot(TrialLead l) => new { l.FullName, l.Phone, l.Email, l.Source, l.Status, l.Note };
 }

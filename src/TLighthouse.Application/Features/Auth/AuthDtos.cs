@@ -18,6 +18,6 @@ public sealed record RefreshRequest
     public string RefreshToken { get; init; } = "";
 }
 
-public sealed record CurrentUserDto(Guid Id, string Email, string FullName, string Status, IReadOnlyList<string> Roles);
+public sealed record CurrentUserDto(Guid Id, string Email, string FullName, string Status, string Role);
 
 public sealed record AuthResponse(TokenPair Tokens, CurrentUserDto User);

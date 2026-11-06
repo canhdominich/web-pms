@@ -2,7 +2,7 @@ import { useConfirm } from '../../components/Confirm';
 import { onInvalid } from '../../components/Toast';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { http, useAction, useGet } from '../../api/hooks';
 import type { Enrollment, Invoice, InvoiceDetail, Paged, Receipt, Student } from '../../api/types';
 import { useAuth } from '../../auth/AuthContext';
@@ -11,6 +11,7 @@ import { Badge, Card, DataTable, Field, KeyValue, Modal, PageHeader, Pagination,
 import { addDays, fmtDate, fmtDateTime, fmtMoney, label, today } from '../../lib/format';
 import { RoleSets } from '../../lib/roles';
 import { ReceiptDialog } from './ReceiptDialog';
+import { DateInput } from '../../components/DateInput';
 
 export function InvoicesPage() {
   const { can } = useAuth();
@@ -121,7 +122,7 @@ function CreateInvoiceDialog({ open, onClose, onCreated }: { open: boolean; onCl
           <input className="input" type="number" min={1} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
         </Field>
         <Field label="Hạn thanh toán">
-          <input className="input" type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} />
+          <DateInput value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} />
         </Field>
         <label className="check span-2">
           <input type="checkbox" checked={form.issue} onChange={(e) => setForm({ ...form, issue: e.target.checked })} /> Phát hành ngay
@@ -198,7 +199,7 @@ function InvoiceDialog({ invoiceId, editable, onClose }: { invoiceId: string | n
                 <input className="input" type="number" min={1} value={edit.amount} onChange={(e) => setEdit({ ...edit, amount: Number(e.target.value) })} />
               </Field>
               <Field label="Hạn thanh toán">
-                <input className="input" type="date" value={edit.dueDate} onChange={(e) => setEdit({ ...edit, dueDate: e.target.value })} />
+                <DateInput value={edit.dueDate} onChange={(e) => setEdit({ ...edit, dueDate: e.target.value })} />
               </Field>
               <div className="actions span-2">
                 <button className="btn btn-primary" disabled={update.isPending} onClick={() => update.mutate(undefined)}>
@@ -246,7 +247,9 @@ function InvoiceDialog({ invoiceId, editable, onClose }: { invoiceId: string | n
                 </select>
               </Field>
               <Field label="Thời điểm thanh toán" hint="Để trống: thời điểm hiện tại">
-                <input className="input" type="datetime-local" max={`${today()}T23:59`} {...payment.register('paidAt')} />
+                <Controller control={payment.control} name="paidAt" render={({ field }) => (
+                  <DateInput withTime max={`${today()}T23:59`} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value)} />
+                )} />
               </Field>
               <div className="span-2">
                 <button className="btn btn-primary" disabled={pay.isPending}>

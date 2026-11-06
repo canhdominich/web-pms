@@ -11,7 +11,6 @@ namespace TLighthouse.Infrastructure.Persistence.Seeding;
 internal sealed class DatabaseInitializer(
     AppDbContext db,
     IPasswordHasher hasher,
-    RoleDirectory roles,
     DemoDataSeeder demoSeeder,
     IOptions<DatabaseOptions> database,
     IOptions<SeedOptions> seed,
@@ -23,7 +22,6 @@ internal sealed class DatabaseInitializer(
     public async Task InitializeAsync(CancellationToken ct)
     {
         if (database.Value.CreateSchemaOnStartup) await CreateSchemaAsync(ct);
-        await EnsureRolesAsync(ct);
         await EnsureRootAsync(ct);
         if (demo.Value.Enabled && demo.Value.SeedOnStartup && !await db.Programs.AnyAsync(ct))
         {
@@ -32,24 +30,17 @@ internal sealed class DatabaseInitializer(
         }
     }
 
-    public async Task EnsureRolesAsync(CancellationToken ct)
-    {
-        var existing = await db.Roles.Select(r => r.Code).ToListAsync(ct);
-        db.Roles.AddRange(RoleCodes.Names.Where(r => !existing.Contains(r.Key)).Select(r => new AuthRole { Code = r.Key, Name = r.Value }));
-        await db.SaveChangesAsync(ct);
-    }
-
     public async Task EnsureRootAsync(CancellationToken ct)
     {
         var email = seed.Value.RootEmail.Trim().ToLowerInvariant();
         var user = await db.Users.FirstOrDefaultAsync(u => u.Email == email, ct);
         if (user is null)
         {
-            user = new AuthUser { Email = email, FullName = seed.Value.RootFullName, PasswordHash = hasher.Hash(seed.Value.RootPassword) };
+            user = new AuthUser { Email = email, FullName = seed.Value.RootFullName, PasswordHash = hasher.Hash(seed.Value.RootPassword), Role = RoleCodes.Root };
             db.Users.Add(user);
             logger.LogInformation("Root account {Email} created", email);
         }
-        if (!(await roles.RolesOfAsync(user.Id, ct)).Contains(RoleCodes.Root)) roles.Assign(user.Id, RoleCodes.Root);
+        else if (user.Role != RoleCodes.Root) user.Role = RoleCodes.Root;
         await db.SaveChangesAsync(ct);
     }
 

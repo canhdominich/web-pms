@@ -9,6 +9,7 @@ import { Badge, Card, DataTable, Field, Modal } from '../../components/ui';
 import { useAuth } from '../../auth/AuthContext';
 import { fmtDate, today } from '../../lib/format';
 import { RoleSets } from '../../lib/roles';
+import { DateInput } from '../../components/DateInput';
 
 type Target = { id: string; status: string; classId: string; studentName: string } | null;
 
@@ -99,7 +100,7 @@ function AddStudentDialog({ classId, open, onClose }: { classId: string; open: b
           <StudentPicker value={student} onChange={setStudent} />
         </Field>
         <Field label="Ngày bắt đầu học">
-          <input className="input" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <DateInput value={startDate} onChange={(e) => setStartDate(e.target.value)} />
         </Field>
       </div>
     </Modal>

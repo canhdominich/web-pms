@@ -79,11 +79,11 @@ public sealed class ExcelService : IExcelService
                 break;
             case DateOnly date:
                 cell.Value = date.ToDateTime(TimeOnly.MinValue);
-                cell.Style.DateFormat.Format = "yyyy-mm-dd";
+                cell.Style.DateFormat.Format = "dd/mm/yyyy";
                 break;
             case DateTime dateTime:
                 cell.Value = dateTime;
-                cell.Style.DateFormat.Format = "yyyy-mm-dd hh:mm:ss";
+                cell.Style.DateFormat.Format = "dd/mm/yyyy hh:mm:ss";
                 break;
             case int number:
                 cell.Value = number;

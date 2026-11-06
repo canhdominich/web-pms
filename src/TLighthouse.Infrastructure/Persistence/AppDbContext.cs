@@ -10,7 +10,6 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     private static readonly string[] TimestampProperties = ["CreatedAt", "UpdatedAt"];
 
     public DbSet<AuthUser> Users => Set<AuthUser>();
-    public DbSet<AuthRole> Roles => Set<AuthRole>();
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();
     public DbSet<CurriculumProgram> Programs => Set<CurriculumProgram>();

@@ -119,7 +119,7 @@ export function Layout() {
             </button>
             <div className="user-meta">
               <strong>{user?.fullName}</strong>
-              <span className="muted small">{user?.roles.map((r) => roleNames[r] ?? r).join(', ')}</span>
+              <span className="muted small">{user ? roleNames[user.role] ?? user.role : ''}</span>
             </div>
             <button className="btn btn-ghost btn-sm" onClick={onLogout}>
               <LogOut size={16} /> Đăng xuất

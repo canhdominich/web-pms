@@ -79,16 +79,31 @@ const tones: Record<string, string> = {
 export const label = (value?: string | null) => (value ? statusNames[value] ?? value : '—');
 export const tone = (value?: string | null) => (value ? tones[value] ?? 'gray' : 'gray');
 
+const pad = (n: number) => String(n).padStart(2, '0');
+
 const toDate = (value: string) => new Date(value.length === 10 ? `${value}T00:00:00` : value);
 
-export const fmtDate = (value?: string | null) =>
-  value ? toDate(value).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+/** dd/MM/yyyy */
+export const fmtDate = (value?: string | null) => {
+  if (!value) return '—';
+  const d = toDate(value);
+  return Number.isNaN(d.getTime()) ? '—' : `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+};
 
-export const fmtDateTime = (value?: string | null) =>
-  value ? toDate(value).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+/** dd/MM/yyyy HH:mm */
+export const fmtDateTime = (value?: string | null) => {
+  if (!value) return '—';
+  const d = toDate(value);
+  return Number.isNaN(d.getTime()) ? '—' : `${fmtDate(value)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
-export const fmtWeekday = (value?: string | null) =>
-  value ? toDate(value).toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+/** Thứ 2, dd/MM/yyyy */
+export const fmtWeekday = (value?: string | null) => {
+  if (!value) return '—';
+  const d = toDate(value);
+  if (Number.isNaN(d.getTime())) return '—';
+  return `${weekdayNames[weekdays[(d.getDay() + 6) % 7]]}, ${fmtDate(value)}`;
+};
 
 export const fmtMoney = (value?: number | null, currency = 'VND') =>
   value === null || value === undefined ? '—' : new Intl.NumberFormat('vi-VN', { style: 'currency', currency }).format(value);

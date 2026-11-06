@@ -10,6 +10,7 @@ import { Badge, Card, DataTable, Field, KeyValue, Modal, PageHeader, Spinner, Ta
 import { blankToNull, fmtDate, fmtMoney, label, today, fmtLesson } from '../../lib/format';
 import { RoleSets } from '../../lib/roles';
 import { StudentForm, type StudentValues } from './StudentForm';
+import { DateInput } from '../../components/DateInput';
 
 type TabKey = 'enrollments' | 'assessments' | 'finance';
 type Target = { id: string; status: string; classId: string; studentName: string } | null;
@@ -151,7 +152,7 @@ function EnrollmentsTab({ student }: { student: Student }) {
             <ClassSelect value={form.classId} onChange={(e) => setForm({ ...form, classId: e.target.value })} />
           </Field>
           <Field label="Ngày bắt đầu">
-            <input className="input" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
+            <DateInput value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
           </Field>
         </div>
       </Modal>

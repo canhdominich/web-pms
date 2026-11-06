@@ -234,11 +234,9 @@ export function SessionDetailPage() {
                   <thead>
                     <tr>
                       <th>Học sinh</th>
-                      <th>Nghe</th>
-                      <th>Đọc</th>
-                      <th>Viết</th>
-                      <th>Nói</th>
-                      <th>Tổng</th>
+                      {(['language', 'cognitive', 'physical', 'social', 'total'] as const).map((k) => (
+                        <th key={k}>{scoreLabels[k]}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>

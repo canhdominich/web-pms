@@ -29,8 +29,7 @@ public static class ServiceCollectionExtensions
                 new BadRequestObjectResult(new ErrorResponse(
                     "VALIDATION_ERROR",
                     "Dữ liệu không hợp lệ",
-                    context.ModelState.Where(e => e.Value?.Errors.Count > 0)
-                        .ToDictionary(e => e.Key, e => e.Value!.Errors.Select(x => x.ErrorMessage).ToArray()),
+                    ValidationMessages.Translate(context.ModelState),
                     context.HttpContext.TraceIdentifier)));
 
         var jwt = configuration.GetSection(JwtOptions.Section).Get<JwtOptions>() ?? new JwtOptions();

@@ -11,7 +11,6 @@ namespace TLighthouse.Infrastructure.Platform;
 
 internal sealed class DemoService(
     AppDbContext db,
-    RoleDirectory roles,
     DatabaseInitializer initializer,
     DemoDataSeeder seeder,
     IAuditTrail audit,
@@ -24,7 +23,7 @@ internal sealed class DemoService(
             throw AppException.Forbidden("Chức năng reset chỉ khả dụng trong môi trường demo");
 
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
-        var rootIds = await roles.UsersInRolesAsync([RoleCodes.Root], ct);
+        var rootIds = await db.Users.Where(u => u.Role == RoleCodes.Root).Select(u => u.Id).ToListAsync(ct);
 
         await db.Payments.ExecuteDeleteAsync(ct);
         await db.SessionScores.ExecuteDeleteAsync(ct);
@@ -39,16 +38,10 @@ internal sealed class DemoService(
         await db.Programs.ExecuteDeleteAsync(ct);
         await db.Students.ExecuteDeleteAsync(ct);
         await db.Notifications.ExecuteDeleteAsync(ct);
-        await db.AuditLogs
-            .Where(a => !(a.Entity == AuditEntities.User
-                          && a.EntityId != null
-                          && rootIds.Contains(a.EntityId.Value)
-                          && (a.Action == AuditActions.AssignRole || a.Action == AuditActions.RevokeRole)))
-            .ExecuteDeleteAsync(ct);
+        await db.AuditLogs.ExecuteDeleteAsync(ct);
         await db.Users.Where(u => !rootIds.Contains(u.Id)).ExecuteDeleteAsync(ct);
 
         db.ChangeTracker.Clear();
-        await initializer.EnsureRolesAsync(ct);
         await initializer.EnsureRootAsync(ct);
         await seeder.SeedAsync(ct);
 

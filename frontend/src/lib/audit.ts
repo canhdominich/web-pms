@@ -28,7 +28,7 @@ export const actionNames: Record<string, string> = {
   TRIAL_CANCEL: 'Hủy lịch học thử',
   CONVERT: 'Chuyển đổi thành học sinh',
   SEND: 'Gửi thông báo',
-  RESET: 'Reset dữ liệu demo',
+  RESET: 'Khôi phục dữ liệu demo',
 };
 
 export const entityNames: Record<string, string> = {

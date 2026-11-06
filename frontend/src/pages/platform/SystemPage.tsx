@@ -23,9 +23,9 @@ export function SystemPage() {
             <button
               className="btn btn-danger"
               disabled={reset.isPending}
-              onClick={async () => (await confirm({ title: 'Reset dữ liệu demo', message: 'Toàn bộ dữ liệu nghiệp vụ sẽ bị xóa và nạp lại dữ liệu mẫu.', confirmText: 'Reset', danger: true })) && reset.mutate(undefined)}
+              onClick={async () => (await confirm({ title: 'Khôi phục dữ liệu demo', message: 'Toàn bộ dữ liệu nghiệp vụ sẽ bị xóa và nạp lại dữ liệu mẫu.', confirmText: 'Khôi phục', danger: true })) && reset.mutate(undefined)}
             >
-              <RotateCcw size={16} /> {reset.isPending ? 'Đang khôi phục...' : 'Reset dữ liệu demo'}
+              <RotateCcw size={16} /> {reset.isPending ? 'Đang khôi phục...' : 'Khôi phục dữ liệu demo'}
             </button>
           </div>
           {result && <KeyValue items={[['Thời điểm', fmtDateTime(result.resetAt)], ...Object.entries(result.counts).map(([k, v]) => [k, v] as [string, number])]} />}

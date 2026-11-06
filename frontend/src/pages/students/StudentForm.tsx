@@ -1,5 +1,6 @@
 import { onInvalid } from '../../components/Toast';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { DateInput } from '../../components/DateInput';
 import type { Student } from '../../api/types';
 import { Field } from '../../components/ui';
 
@@ -26,14 +27,16 @@ export const toStudentValues = (s?: Student | null): StudentValues => ({
 });
 
 export function StudentForm({ id, initial, onSubmit }: { id: string; initial?: Student | null; onSubmit: (values: StudentValues) => void }) {
-  const { register, handleSubmit } = useForm<StudentValues>({ values: toStudentValues(initial) });
+  const { register, handleSubmit, control } = useForm<StudentValues>({ values: toStudentValues(initial) });
   return (
     <form id={id} className="form-grid" onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <Field label="Họ và tên" span>
         <input className="input" required {...register('fullName', { required: true })} />
       </Field>
       <Field label="Ngày sinh">
-        <input className="input" type="date" {...register('dob')} />
+        <Controller control={control} name="dob" render={({ field }) => (
+            <DateInput value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value)} />
+          )} />
       </Field>
       <Field label="Giới tính">
         <select className="input" {...register('gender')}>

@@ -25,7 +25,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <PageHeader title={`Xin chào, ${user?.fullName}`} subtitle={user?.roles.map((r) => roleNames[r] ?? r).join(' · ')} />
+      <PageHeader title={`Xin chào, ${user?.fullName}`} subtitle={user ? roleNames[user.role] ?? user.role : ''} />
       <div className="stats">
         {staff && <Stat label="Lớp đang hoạt động" value={classes.data?.total ?? '…'} icon={<School size={20} />} />}
         {staff && <Stat label="Học sinh" value={students.data?.total ?? '…'} icon={<GraduationCap size={20} />} tone="green" />}

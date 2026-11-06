@@ -10,6 +10,7 @@ import { Badge, Card, DataTable, Field, KeyValue, Modal, PageHeader, LoadState }
 import { blankToNull, fmtDate, fmtDateTime, fmtWeekday, today, fmtLesson } from '../../lib/format';
 import { RoleSets } from '../../lib/roles';
 import { TrialLeadForm, type LeadValues } from './TrialLeadForm';
+import { DateInput } from '../../components/DateInput';
 
 const finalStatuses = ['CONVERTED', 'CLOSED'];
 
@@ -251,7 +252,7 @@ function ConvertDialog({ leadId, open, onClose }: { leadId: string; open: boolea
           ) : (
             <>
               <Field label="Ngày sinh">
-                <input className="input" type="date" value={form.dob} onChange={set('dob')} />
+                <DateInput value={form.dob} onChange={set('dob')} />
               </Field>
               <Field label="Giới tính">
                 <select className="input" value={form.gender} onChange={set('gender')}>
@@ -275,7 +276,7 @@ function ConvertDialog({ leadId, open, onClose }: { leadId: string; open: boolea
             <ClassSelect value={form.classId} onChange={set('classId')} />
           </Field>
           <Field label="Ngày bắt đầu" hint="Mặc định: hôm nay hoặc ngày khai giảng">
-            <input className="input" type="date" value={form.startDate} onChange={set('startDate')} />
+            <DateInput value={form.startDate} onChange={set('startDate')} />
           </Field>
         </div>
       )}

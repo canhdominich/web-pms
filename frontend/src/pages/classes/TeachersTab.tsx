@@ -5,6 +5,7 @@ import type { ClassDetail } from '../../api/types';
 import { TeacherSelect } from '../../components/pickers';
 import { Badge, Card, DataTable, Field } from '../../components/ui';
 import { fmtDate, today } from '../../lib/format';
+import { DateInput } from '../../components/DateInput';
 
 export function TeachersTab({ detail, editable }: { detail: ClassDetail; editable: boolean }) {
   const confirm = useConfirm();
@@ -55,10 +56,10 @@ export function TeachersTab({ detail, editable }: { detail: ClassDetail; editabl
                 <TeacherSelect placeholder="— Chọn giáo viên —" value={assign.teacherId} onChange={(e) => setAssign({ ...assign, teacherId: e.target.value })} />
               </Field>
               <Field label="Từ ngày">
-                <input className="input" type="date" min={today()} value={assign.fromDate} onChange={(e) => setAssign({ ...assign, fromDate: e.target.value })} />
+                <DateInput min={today()} value={assign.fromDate} onChange={(e) => setAssign({ ...assign, fromDate: e.target.value })} />
               </Field>
               <Field label="Đến ngày">
-                <input className="input" type="date" value={assign.toDate} onChange={(e) => setAssign({ ...assign, toDate: e.target.value })} />
+                <DateInput value={assign.toDate} onChange={(e) => setAssign({ ...assign, toDate: e.target.value })} />
               </Field>
               <label className="check span-2">
                 <input type="checkbox" checked={assign.replaceExisting} onChange={(e) => setAssign({ ...assign, replaceExisting: e.target.checked })} />
@@ -77,7 +78,7 @@ export function TeachersTab({ detail, editable }: { detail: ClassDetail; editabl
                 <TeacherSelect placeholder="— Chọn giáo viên —" value={change.teacherId} onChange={(e) => setChange({ ...change, teacherId: e.target.value })} />
               </Field>
               <Field label="Ngày hiệu lực" span hint="Áp dụng cho các buổi chưa có nhận xét từ ngày này">
-                <input className="input" type="date" min={today()} value={change.effectiveDate} onChange={(e) => setChange({ ...change, effectiveDate: e.target.value })} />
+                <DateInput min={today()} value={change.effectiveDate} onChange={(e) => setChange({ ...change, effectiveDate: e.target.value })} />
               </Field>
               <div className="span-2">
                 <button className="btn btn-primary" disabled={!change.teacherId || changeAction.isPending} onClick={() => changeAction.mutate(undefined)}>

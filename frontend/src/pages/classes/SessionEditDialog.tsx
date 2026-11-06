@@ -1,5 +1,6 @@
 import { onInvalid } from '../../components/Toast';
 import { Controller, useForm } from 'react-hook-form';
+import { DateInput } from '../../components/DateInput';
 import { http, useAction } from '../../api/hooks';
 import type { Session } from '../../api/types';
 import { TeacherSelect } from '../../components/pickers';
@@ -40,7 +41,9 @@ export function SessionEditDialog({ session, onClose }: { session: Session | nul
       <form id="edit-session" className="form-grid" onSubmit={handleSubmit((v) => action.mutate(v), onInvalid)}>
         {locked && <div className="notice span-2">Buổi học đã có nhận xét/đánh giá: không thể đổi ngày hoặc loại buổi.</div>}
         <Field label="Ngày học">
-          <input className="input" type="date" disabled={locked} {...register('sessionDate')} />
+          <Controller control={control} name="sessionDate" render={({ field }) => (
+            <DateInput disabled={locked} value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value)} />
+          )} />
         </Field>
         <Field label="Loại buổi">
           <select className="input" disabled={locked} {...register('sessionType')}>

@@ -25,12 +25,6 @@ public sealed class UsersController(IUserService users) : ApiControllerBase
 
     [HttpPut("{id:guid}")]
     public Task<UserDto> Update(Guid id, UpdateUserRequest request, CancellationToken ct) => users.UpdateAsync(id, request, ct);
-
-    [HttpPost("{id:guid}/roles")]
-    public Task<UserDto> AssignRole(Guid id, AssignRoleRequest request, CancellationToken ct) => users.AssignRoleAsync(id, request, ct);
-
-    [HttpDelete("{id:guid}/roles/{roleCode}")]
-    public Task<UserDto> RevokeRole(Guid id, string roleCode, CancellationToken ct) => users.RevokeRoleAsync(id, roleCode, ct);
 }
 
 [Route("api/teachers"), Authorize(Roles = RoleSets.Staff)]

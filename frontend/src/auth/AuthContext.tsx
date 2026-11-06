@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [clear]);
 
-  const can = useCallback((roles: RoleSet) => !!user && user.roles.some((r) => roles.includes(r)), [user]);
+  const can = useCallback((roles: RoleSet) => !!user && roles.includes(user.role), [user]);
 
   const value = useMemo(() => ({ user, loading, login, logout, can }), [user, loading, login, logout, can]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

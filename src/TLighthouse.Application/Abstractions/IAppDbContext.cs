@@ -7,7 +7,6 @@ namespace TLighthouse.Application.Abstractions;
 public interface IAppDbContext
 {
     DbSet<AuthUser> Users { get; }
-    DbSet<AuthRole> Roles { get; }
     DbSet<Student> Students { get; }
     DbSet<Enrollment> Enrollments { get; }
     DbSet<CurriculumProgram> Programs { get; }

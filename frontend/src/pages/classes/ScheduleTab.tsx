@@ -5,6 +5,7 @@ import { TeacherSelect } from '../../components/pickers';
 import { Card, Field, KeyValue } from '../../components/ui';
 import { fmtDate, today, weekdayNames } from '../../lib/format';
 import { WeekdayChecks } from './WeekdayChecks';
+import { DateInput } from '../../components/DateInput';
 
 export function ScheduleTab({ detail, editable }: { detail: ClassDetail; editable: boolean }) {
   const s = detail.schedule;
@@ -42,7 +43,7 @@ export function ScheduleTab({ detail, editable }: { detail: ClassDetail; editabl
                 <WeekdayChecks value={weekdays} onChange={setWeekdays} />
               </Field>
               <Field label="Bắt đầu từ ngày">
-                <input className="input" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+                <DateInput value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
               </Field>
               <Field label="Giáo viên chính">
                 <TeacherSelect value={mainTeacherId} onChange={(e) => setMainTeacherId(e.target.value)} />
@@ -62,7 +63,7 @@ export function ScheduleTab({ detail, editable }: { detail: ClassDetail; editabl
                 <WeekdayChecks value={weekdays} onChange={setWeekdays} />
               </Field>
               <Field label="Ngày hiệu lực">
-                <input className="input" type="date" min={today()} value={effectiveDate} onChange={(e) => setEffectiveDate(e.target.value)} />
+                <DateInput min={today()} value={effectiveDate} onChange={(e) => setEffectiveDate(e.target.value)} />
               </Field>
               <div>
                 <button className="btn btn-primary" disabled={reschedule.isPending || weekdays.length === 0} onClick={() => reschedule.mutate(undefined)}>

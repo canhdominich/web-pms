@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, Inbox, Loader2, X } from 'lucide-react';
 import { errorMessage } from '../api/client';
 import { label, tone } from '../lib/format';
+import { DateInput } from './DateInput';
 
 export function PageHeader({
   title,
@@ -264,11 +265,11 @@ export function DateRange({
     <>
       <label className="inline-field">
         <span>{fromLabel}</span>
-        <input className="input" type="date" value={from} max={to || undefined} onChange={(e) => onChange({ from: e.target.value, to })} />
+        <DateInput value={from} max={to || undefined} onChange={(e) => onChange({ from: e.target.value, to })} />
       </label>
       <label className="inline-field">
         <span>{toLabel}</span>
-        <input className="input" type="date" value={to} min={from || undefined} onChange={(e) => onChange({ from, to: e.target.value })} />
+        <DateInput value={to} min={from || undefined} onChange={(e) => onChange({ from, to: e.target.value })} />
       </label>
       {(from || to) && (
         <button type="button" className="btn btn-ghost btn-sm" onClick={() => onChange({ from: '', to: '' })}>

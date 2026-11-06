@@ -17,7 +17,6 @@ public interface IAuthService
 internal sealed class AuthService(
     IAppDbContext db,
     IPasswordHasher hasher,
-    RoleDirectory roles,
     ITokenService tokens,
     ICurrentUser currentUser,
     IAuditTrail audit) : IAuthService
@@ -30,7 +29,7 @@ internal sealed class AuthService(
             throw AppException.Unauthorized("Email hoặc mật khẩu không đúng");
         if (user.Status != UserStatuses.Active)
             throw AppException.Forbidden("Tài khoản đã bị khóa");
-        return await IssueAsync(user, ct);
+        return Issue(user);
     }
 
     public async Task<AuthResponse> RefreshAsync(RefreshRequest request, CancellationToken ct)
@@ -44,7 +43,7 @@ internal sealed class AuthService(
             a.ActorUserId == user.Id && a.Action == AuditActions.Logout && a.CreatedAt >= payload.IssuedAt, ct);
         if (loggedOut)
             throw AppException.Unauthorized("Phiên làm việc đã đăng xuất");
-        return await IssueAsync(user, ct);
+        return Issue(user);
     }
 
     public async Task LogoutAsync(CancellationToken ct)
@@ -57,19 +56,15 @@ internal sealed class AuthService(
     {
         var id = currentUser.RequiredId;
         var user = await LoadAsync(u => u.Id == id, ct) ?? throw AppException.NotFound("người dùng");
-        return await ToDtoAsync(user, ct);
+        return ToDto(user);
     }
 
     private Task<AuthUser?> LoadAsync(System.Linq.Expressions.Expression<Func<AuthUser, bool>> predicate, CancellationToken ct) =>
         db.Users.AsNoTracking().FirstOrDefaultAsync(predicate, ct);
 
-    private async Task<AuthResponse> IssueAsync(AuthUser user, CancellationToken ct)
-    {
-        var dto = await ToDtoAsync(user, ct);
-        if (dto.Roles.Count == 0) throw AppException.Forbidden("Tài khoản chưa được gán vai trò");
-        return new AuthResponse(tokens.Issue(user, dto.Roles), dto);
-    }
+    private AuthResponse Issue(AuthUser user) =>
+        new(tokens.Issue(user, [user.Role]), ToDto(user));
 
-    private async Task<CurrentUserDto> ToDtoAsync(AuthUser user, CancellationToken ct) =>
-        new(user.Id, user.Email, user.FullName, user.Status, await roles.RolesOfAsync(user.Id, ct));
+    private static CurrentUserDto ToDto(AuthUser user) =>
+        new(user.Id, user.Email, user.FullName, user.Status, user.Role);
 }

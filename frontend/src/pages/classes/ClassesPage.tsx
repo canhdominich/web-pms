@@ -9,6 +9,7 @@ import { Can } from '../../auth/guards';
 import { ProgramSelect, TeacherSelect } from '../../components/pickers';
 import { Badge, Card, DataTable, Field, Modal, PageHeader, Pagination } from '../../components/ui';
 import { fmtDate, today } from '../../lib/format';
+import { DateInput } from '../../components/DateInput';
 import { RoleSets } from '../../lib/roles';
 import { WeekdayChecks } from './WeekdayChecks';
 
@@ -133,7 +134,9 @@ function CreateClassDialog({ open, onClose, onCreated }: { open: boolean; onClos
           <input className="input" type="number" min={1} max={100} {...register('capacity', { valueAsNumber: true })} />
         </Field>
         <Field label="Ngày khai giảng">
-          <input className="input" type="date" required {...register('startDate', { required: true })} />
+          <Controller control={control} name="startDate" rules={{ required: true }} render={({ field }) => (
+            <DateInput required value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value)} />
+          )} />
         </Field>
         <Field group label="Lịch học">
           <label className="check">

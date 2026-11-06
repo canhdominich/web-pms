@@ -1,22 +1,16 @@
 ﻿ALTER DATABASE CHARACTER SET utf8mb4;
 
 
-CREATE TABLE `auth_roles` (
-    `id` char(36) COLLATE ascii_general_ci NOT NULL,
-    `code` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
-    `name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
-    CONSTRAINT `pk_auth_roles` PRIMARY KEY (`id`)
-) CHARACTER SET=utf8mb4;
-
-
 CREATE TABLE `auth_users` (
     `id` char(36) COLLATE ascii_general_ci NOT NULL,
     `email` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
     `password_hash` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
     `full_name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+    `role` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
     `status` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'ACTIVE',
     `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    CONSTRAINT `pk_auth_users` PRIMARY KEY (`id`)
+    CONSTRAINT `pk_auth_users` PRIMARY KEY (`id`),
+    CONSTRAINT `ck_auth_users_role` CHECK (role IN ('ROOT', 'DIRECTOR', 'ACADEMIC', 'SALES', 'ACCOUNTANT', 'TEACHER'))
 ) CHARACTER SET=utf8mb4;
 
 
@@ -223,9 +217,6 @@ CREATE TABLE `finance_payments` (
     CONSTRAINT `ck_finance_payments_method` CHECK (method IN ('CASH', 'TRANSFER', 'CARD', 'OTHER')),
     CONSTRAINT `fk_finance_payments_finance_invoices_invoice_id` FOREIGN KEY (`invoice_id`) REFERENCES `finance_invoices` (`id`) ON DELETE RESTRICT
 ) CHARACTER SET=utf8mb4;
-
-
-CREATE UNIQUE INDEX `ix_auth_roles_code` ON `auth_roles` (`code`);
 
 
 CREATE UNIQUE INDEX `ix_auth_users_email` ON `auth_users` (`email`);

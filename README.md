@@ -26,7 +26,7 @@ source/
 │   ├── TLighthouse.Infrastructure/  DbContext, cấu hình bảng, JWT, Excel, seed, job quá hạn
 │   └── TLighthouse.Api/             Controller, xử lý lỗi tập trung, cấu hình auth/CORS/rate limit/Swagger
 ├── frontend/                Ứng dụng React (Vite + TypeScript), phục vụ bằng nginx, proxy /api tới API
-├── database/schema.sql      Script DDL MySQL (đúng 15 bảng), sinh từ model EF Core
+├── database/schema.sql      Script DDL MySQL (đúng 14 bảng), sinh từ model EF Core
 ├── database/tlighthouse_dump.sql    Bản export đầy đủ CSDL (cấu trúc + dữ liệu demo), tạo bằng mysqldump
 ├── Dockerfile
 ├── docker-compose.yml
@@ -47,7 +47,7 @@ docker compose up -d --build
 - Health check: http://localhost:8080/health
 - MySQL: `localhost:3307` (user/password theo `.env`)
 
-Khi khởi động lần đầu, API tự tạo đúng 15 bảng (nếu CSDL còn trống), tạo 6 vai trò, tạo tài khoản ROOT từ `ROOT_EMAIL`/`ROOT_PASSWORD`. Nếu `DEMO_ENABLED=true` và `DEMO_SEED_ON_STARTUP=true`, hệ thống nạp dữ liệu mẫu.
+Khi khởi động lần đầu, API tự tạo đúng 14 bảng (nếu CSDL còn trống), tạo tài khoản ROOT từ `ROOT_EMAIL`/`ROOT_PASSWORD`. Nếu `DEMO_ENABLED=true` và `DEMO_SEED_ON_STARTUP=true`, hệ thống nạp dữ liệu mẫu.
 
 Tài khoản demo (mật khẩu `DEMO_PASSWORD`, mặc định `Demo@12345`):
 
@@ -73,12 +73,12 @@ Dừng: `docker compose down` (thêm `-v` để xóa dữ liệu MySQL).
 
 ## Cơ sở dữ liệu
 
-Hệ thống dùng **đúng 15 bảng** theo thiết kế: `auth_users`, `auth_roles`, `students`, `enrollments`, `curriculum_programs`, `classes`, `sessions`, `session_feedback`, `session_scores`, `finance_fee_plans`, `finance_invoices`, `finance_payments`, `trial_leads`, `system_audit_logs`, `system_notifications`. CSDL không có bảng nào khác, kể cả bảng lịch sử migration: schema được tạo trực tiếp từ model khi CSDL còn trống (`Database__CreateSchemaOnStartup=true`).
+Hệ thống dùng **14 bảng**: `auth_users`, `students`, `enrollments`, `curriculum_programs`, `classes`, `sessions`, `session_feedback`, `session_scores`, `finance_fee_plans`, `finance_invoices`, `finance_payments`, `trial_leads`, `system_audit_logs`, `system_notifications`. CSDL không có bảng nào khác, kể cả bảng lịch sử migration: schema được tạo trực tiếp từ model khi CSDL còn trống (`Database__CreateSchemaOnStartup=true`).
 
 Có 2 cách dựng CSDL thủ công:
 
 ```bash
-mysql -u<user> -p <database> < database/schema.sql     # chỉ cấu trúc 15 bảng
+mysql -u<user> -p <database> < database/schema.sql     # chỉ cấu trúc 14 bảng
 mysql -u<user> -p <database> < database/tlighthouse_dump.sql   # cấu trúc + dữ liệu demo
 ```
 
@@ -97,14 +97,12 @@ Một số chức năng không có bảng riêng trong thiết kế. Chúng đư
 
 | Dữ liệu | Cách lưu |
 |---|---|
-| Vai trò của người dùng (chức năng 4) | Sự kiện `ASSIGN_ROLE` / `REVOKE_ROLE` trong `system_audit_logs` (`entity = auth_users`, `meta = {"role": "..."}`). Vai trò hiện tại được tính từ chuỗi sự kiện. |
+| Vai trò của người dùng (chức năng 4) | Cột `auth_users.role` (mỗi tài khoản đúng một vai trò, ràng buộc CHECK theo 6 mã vai trò ROOT, DIRECTOR, ACADEMIC, SALES, ACCOUNTANT, TEACHER). Danh mục vai trò nằm trong code (`RoleCodes`), không có bảng riêng. Mỗi lần đổi vai trò ghi sự kiện `ASSIGN_ROLE` vào `system_audit_logs`. |
 | Lịch học thử (chức năng 33) | `trial_leads.status` giữ trạng thái hiện tại. Sự kiện `TRIAL_SCHEDULE` / `TRIAL_RESULT` / `TRIAL_CANCEL` trong `system_audit_logs` lưu buổi học (`sessionId`) và kết quả. |
 | Chuyển đổi học thử (chức năng 34) | `trial_leads.status = CONVERTED`. Sự kiện `CONVERT` lưu `studentId`, `enrollmentId`. Học sinh và ghi danh được tạo trong `students`, `enrollments`. |
 | Chủ đề / Hoạt động (chức năng 6, mã nội bộ unit/lesson) | Suy ra từ `total_units` và `lessons_per_unit` của `curriculum_programs`. |
 | Lịch học, nhân sự lớp (9, 10) | Nằm trong `sessions` (`session_date`, `main_teacher_id`, `cover_teacher_id`). |
 | Lịch sử ghi danh, đăng xuất | Sự kiện trong `system_audit_logs`. |
-
-Vì `system_audit_logs` chứa dữ liệu vai trò, không được xóa hay áp dụng chính sách lưu trữ có thời hạn cho các sự kiện `ASSIGN_ROLE` / `REVOKE_ROLE`.
 
 ## Danh sách chức năng → API
 
@@ -115,7 +113,7 @@ Mọi API (trừ login/refresh) yêu cầu header `Authorization: Bearer <access
 | 1 | Đăng nhập / đăng xuất / duy trì phiên | `POST /api/auth/login`, `POST /api/auth/logout`, `POST /api/auth/refresh` |
 | 2 | Người dùng hiện tại | `GET /api/auth/me` |
 | 3 | Quản lý tài khoản | `GET/POST /api/users`, `GET/PUT /api/users/{id}` |
-| 4 | Gán / thu hồi vai trò | `GET /api/roles`, `POST /api/users/{id}/roles`, `DELETE /api/users/{id}/roles/{roleCode}`, `GET /api/teachers` |
+| 4 | Phân vai trò | `GET /api/roles`, `POST /api/users` và `PUT /api/users/{id}` (trường `role`), `GET /api/teachers` |
 | 5 | Chương trình học | `GET/POST /api/programs`, `GET/PUT /api/programs/{id}` |
 | 6 | Chủ đề giáo dục theo chương trình | `GET/PUT /api/programs/{id}/units` |
 | 7 | Nhập / xuất chương trình | `POST /api/programs/import`, `GET /api/programs/export` |
@@ -175,6 +173,8 @@ Mọi API (trừ login/refresh) yêu cầu header `Authorization: Bearer <access
 
 ## Giao diện web (frontend)
 
+Toàn bộ nhãn trên giao diện bằng tiếng Việt; mọi ngày hiển thị và nhập theo định dạng dd/MM/yyyy (ngày giờ: dd/MM/yyyy HH:mm).
+
 | Vai trò | Màn hình |
 |---|---|
 | Tất cả | Đăng nhập, tổng quan, thông báo (đánh dấu đã đọc) |
@@ -209,9 +209,11 @@ docker compose exec mysql sh -c 'mysqldump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -
 
 ## Kiểm thử đã thực hiện
 
+> Số liệu dưới đây là của bản phát hành đầu tiên, chưa chạy lại đầy đủ sau các thay đổi về vai trò (một vai trò/tài khoản), định dạng ngày dd/MM/yyyy và đổi tên cột đánh giá.
+
 | Phạm vi | Kết quả |
 |---|---|
-| CSDL so với `THIET_KE_CSDL.txt` | 15/15 bảng, 117/117 cột (tên, kiểu, NULL, DEFAULT), 17/17 khóa ngoại |
+| CSDL so với `THIET_KE_CSDL.txt` | 15/15 bảng, 117/117 cột (bản phát hành đầu, trước khi bỏ `auth_roles` và thêm `auth_users.role`) |
 | API: 37 chức năng và các quy tắc nghiệp vụ, kèm kiểm tra dữ liệu thực tế trong CSDL | 129/129 kiểm tra đạt |
 | Giao diện: thao tác thật qua trình duyệt (mở lớp, ghi danh, bảo lưu, đóng lớp, nhập nhận xét, lập hóa đơn, thu tiền, học thử, chuyển đổi) | 20/20 đạt |
 | Phân quyền giao diện: 6 vai trò × 20 trang | 120/120 đạt, không lỗi JavaScript |

@@ -49,7 +49,7 @@ public sealed class SeedOptions
     public string RootPassword { get; init; } = "";
 
     [Required]
-    public string RootFullName { get; init; } = "System Root";
+    public string RootFullName { get; init; } = "Quản trị hệ thống";
 }
 
 public sealed class DemoOptions

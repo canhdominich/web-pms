@@ -25,7 +25,7 @@
   --purple-bg: #f3e8ff;
   --gray: #475569;
   --gray-bg: #eef2f7;
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
   color: var(--text);
   font-size: 14px;
 }
@@ -1218,4 +1218,44 @@ pre.meta {
   .modal {
     box-shadow: none;
   }
+}
+
+.date-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input .input {
+  padding-right: 36px;
+}
+
+.date-input-btn {
+  position: absolute;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted, #64748b);
+  cursor: pointer;
+}
+
+.date-input-btn:hover:not(:disabled) {
+  background: rgba(100, 116, 139, 0.15);
+}
+
+.date-input-native {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
 }

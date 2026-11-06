@@ -3,6 +3,7 @@ import { http, useAction } from '../../api/hooks';
 import type { ClassDetail } from '../../api/types';
 import { ClassSelect } from '../../components/pickers';
 import { Card, Empty, Field } from '../../components/ui';
+import { DateInput } from '../../components/DateInput';
 
 export function PromotionTab({ detail, editable }: { detail: ClassDetail; editable: boolean }) {
   const active = detail.roster.filter((r) => r.status === 'ACTIVE');
@@ -42,7 +43,7 @@ export function PromotionTab({ detail, editable }: { detail: ClassDetail; editab
             <ClassSelect exclude={detail.class.id} value={form.targetClassId} onChange={(e) => setForm({ ...form, targetClassId: e.target.value })} />
           </Field>
           <Field label="Ngày bắt đầu ở lớp mới" hint="Mặc định: ngày khai giảng lớp đích">
-            <input className="input" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
+            <DateInput value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
           </Field>
           <label className="check span-2">
             <input type="checkbox" checked={form.closeSourceClass} onChange={(e) => setForm({ ...form, closeSourceClass: e.target.checked })} />

@@ -1,5 +1,6 @@
 import { onInvalid } from './Toast';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { DateInput } from './DateInput';
 import { http, useAction, useGet } from '../api/hooks';
 import type { Attendance, EnrollmentDetail } from '../api/types';
 import { fmtDate, fmtDateTime, label, today } from '../lib/format';
@@ -17,7 +18,7 @@ export const canChangeStatus = (status: string) => status in transitions;
 type Target = { id: string; status: string; classId?: string; studentName?: string } | null;
 
 export function EnrollmentStatusDialog({ target, onClose }: { target: Target; onClose: () => void }) {
-  const { register, handleSubmit, reset } = useForm({ defaultValues: { status: '', reason: '', effectiveDate: today() } });
+  const { register, handleSubmit, reset, control } = useForm({ defaultValues: { status: '', reason: '', effectiveDate: today() } });
   const action = useAction((v: { status: string; reason: string; effectiveDate: string }) => http.patch(`/enrollments/${target!.id}/status`, v), {
     success: 'Đã cập nhật trạng thái học tập',
     onSuccess: () => {
@@ -49,7 +50,9 @@ export function EnrollmentStatusDialog({ target, onClose }: { target: Target; on
           </select>
         </Field>
         <Field label="Ngày hiệu lực">
-          <input type="date" className="input" {...register('effectiveDate')} />
+          <Controller control={control} name="effectiveDate" render={({ field }) => (
+            <DateInput value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value)} />
+          )} />
         </Field>
         <Field label="Lý do" span>
           <textarea className="input" rows={3} required {...register('reason', { required: true })} />
@@ -60,7 +63,7 @@ export function EnrollmentStatusDialog({ target, onClose }: { target: Target; on
 }
 
 export function TransferDialog({ target, onClose }: { target: Target; onClose: () => void }) {
-  const { register, handleSubmit, reset } = useForm({ defaultValues: { targetClassId: '', transferDate: today(), reason: '' } });
+  const { register, handleSubmit, reset, control } = useForm({ defaultValues: { targetClassId: '', transferDate: today(), reason: '' } });
   const action = useAction((v: { targetClassId: string; transferDate: string; reason: string }) => http.post(`/enrollments/${target!.id}/transfer`, v), {
     success: 'Đã chuyển lớp',
     onSuccess: () => {
@@ -84,7 +87,9 @@ export function TransferDialog({ target, onClose }: { target: Target; onClose: (
           <ClassSelect required exclude={target?.classId} {...register('targetClassId', { required: true })} />
         </Field>
         <Field label="Ngày chuyển">
-          <input type="date" className="input" {...register('transferDate')} />
+          <Controller control={control} name="transferDate" render={({ field }) => (
+            <DateInput value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value)} />
+          )} />
         </Field>
         <Field label="Lý do" span>
           <textarea className="input" rows={3} required {...register('reason', { required: true })} />

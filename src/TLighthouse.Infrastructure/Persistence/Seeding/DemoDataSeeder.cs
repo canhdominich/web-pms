@@ -12,7 +12,6 @@ namespace TLighthouse.Infrastructure.Persistence.Seeding;
 internal sealed class DemoDataSeeder(
     AppDbContext db,
     IPasswordHasher hasher,
-    RoleDirectory roles,
     TrialScheduleBook trialSchedules,
     IOptions<DemoOptions> options,
     IClock clock)
@@ -160,7 +159,7 @@ internal sealed class DemoDataSeeder(
         var leads = new[]
         {
             new TrialLead { FullName = "Ngô Bảo Châu", Phone = "0912000001", Source = "Facebook", Status = TrialLeadStatuses.New, Creator = sales, CreatedAt = now },
-            new TrialLead { FullName = "Trịnh Minh Thư", Phone = "0912000002", Email = "parent.thu@example.com", Source = "Website", Status = TrialLeadStatuses.Contacted, Note = "Phụ huynh muốn cho bé học thử buổi sáng", Creator = sales, CreatedAt = now },
+            new TrialLead { FullName = "Trịnh Minh Thư", Phone = "0912000002", Email = "parent.thu@example.com", Source = "Trang web", Status = TrialLeadStatuses.Contacted, Note = "Phụ huynh muốn cho bé học thử buổi sáng", Creator = sales, CreatedAt = now },
             new TrialLead { FullName = "Mai Gia Bảo", Phone = "0912000003", Source = "Giới thiệu", Status = TrialLeadStatuses.Scheduled, Creator = sales, CreatedAt = now }
         };
         db.TrialLeads.AddRange(leads);
@@ -177,8 +176,7 @@ internal sealed class DemoDataSeeder(
 
     private AuthUser CreateUser(string email, string fullName, string roleCode)
     {
-        var user = new AuthUser { Email = email, FullName = fullName, PasswordHash = hasher.Hash(options.Value.Password), CreatedAt = clock.UtcNow };
-        roles.Assign(user.Id, roleCode);
+        var user = new AuthUser { Email = email, FullName = fullName, PasswordHash = hasher.Hash(options.Value.Password), Role = roleCode, CreatedAt = clock.UtcNow };
         return user;
     }
 
