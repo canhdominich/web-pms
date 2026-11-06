@@ -1,0 +1,79 @@
+name: eim
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+00:00
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-eim}
+      MYSQL_USER: ${MYSQL_USER:-eim}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD is required}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u\"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    networks:
+      - eim
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eim-api:latest
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      Database__ConnectionString: "Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-eim};User=${MYSQL_USER:-eim};Password=${MYSQL_PASSWORD};CharSet=utf8mb4"
+      Database__ServerVersion: "8.4.0"
+      Database__CreateSchemaOnStartup: "true"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
+      Jwt__AccessTokenMinutes: ${JWT_ACCESS_TOKEN_MINUTES:-15}
+      Jwt__RefreshTokenDays: ${JWT_REFRESH_TOKEN_DAYS:-7}
+      Seed__RootEmail: ${ROOT_EMAIL:-root@eim.local}
+      Seed__RootPassword: ${ROOT_PASSWORD:?ROOT_PASSWORD is required}
+      Demo__Enabled: ${DEMO_ENABLED:-false}
+      Demo__SeedOnStartup: ${DEMO_SEED_ON_STARTUP:-false}
+      Demo__Password: ${DEMO_PASSWORD:-Demo@12345}
+      Clock__TimeZone: ${APP_TIMEZONE:-Asia/Ho_Chi_Minh}
+      Cors__AllowedOrigins__0: ${CORS_ORIGIN:-http://localhost:3000}
+      Swagger__Enabled: ${SWAGGER_ENABLED:-true}
+      RateLimit__AuthPermitPerMinute: ${AUTH_RATE_LIMIT_PER_MINUTE:-10}
+      Jobs__OverdueIntervalMinutes: ${OVERDUE_JOB_INTERVAL_MINUTES:-60}
+    ports:
+      - "${API_PORT:-8080}:8080"
+    networks:
+      - eim
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: eim-web:latest
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT:-3000}:80"
+    networks:
+      - eim
+
+volumes:
+  mysql-data:
+
+networks:
+  eim:
+    driver: bridge
